@@ -83,7 +83,14 @@ const DEFAULT = {
  },
  image:{
   monster:["demonic brain monster"],
-  product:["Vitamin C Serum"]
+  product:["Vitamin C Serum"],
+  horrorStyle:[
+   "Nightmare psychological horror",
+   "Dark fantasy gothic horror",
+   "Lovecraftian cosmic horror",
+   "Cursed dream horror",
+   "Eldritch demon horror"
+  ]
  }
 };
 
@@ -120,13 +127,16 @@ function render(){
   const i=data.image;
   menu.innerHTML=
   sec("👹 MONSTER","monster",i.monster)+
+  sec("🩸 HORROR STYLE","horrorStyle",i.horrorStyle)+
   sec("🧪 PRODUCT","iproduct",i.product);
  }
  update();
 }
 
 function add(k){
- let arr = mode==="universal"?data.universal[k]:data.image[k==="iproduct"?"product":k];
+ let arr = mode==="universal"
+  ? data.universal[k]
+  : data.image[k==="iproduct"?"product":k];
  let i=document.getElementById(k+"_i");
  if(!i.value) return;
  arr.push(i.value);
@@ -135,7 +145,9 @@ function add(k){
 }
 
 function delItem(k){
- let arr = mode==="universal"?data.universal[k]:data.image[k==="iproduct"?"product":k];
+ let arr = mode==="universal"
+  ? data.universal[k]
+  : data.image[k==="iproduct"?"product":k];
  let s=document.getElementById(k+"_s");
  if(!confirm("ลบ "+s.value+"?")) return;
  arr.splice(s.selectedIndex,1);
@@ -220,6 +232,16 @@ High conversion focused..
  }
  else {
   imageResult.value = `Please help create an image ULTRA REALISTIC CINEMATIC HORROR:
+
+Style: ${v("horrorStyle")}, extreme cinematic mood, nightmare dream logic, psychological terror, dark surreal atmosphere,
+
+${v("monster")}, anatomically accurate, hyper detailed organic textures, wet glossy skin, glowing veins, subsurface scattering flesh, extreme emotional, cinematic horror storytelling,
+
+Dark medical laboratory environment, macro close-up, volumetric lighting, ultra contrast, shallow depth of field,
+
+Presenting ${v("iproduct")}, glowing product aura, salvation vs darkness contrast, shock marketing advertising style,
+
+Ratio 9:16, 8K hyper realism, ultra sharp focus, cinematic composition, nightmare fuel, viral advertising, extreme engagement, high conversion.`;
 
 ${v("monster")}, anatomically accurate, hyper detailed organic textures, wet glossy skin, glowing veins, subsurface scattering flesh, extreme emotional, cinematic horror storytelling,
 
