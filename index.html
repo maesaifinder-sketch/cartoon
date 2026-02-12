@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal + Horror Ad Prompt Builder GOD MODE</title>
+<style>
+body{margin:0;font-family:system-ui;background:#f2f2f2}
+.container{display:flex;height:100vh}
+.left{width:70%;padding:12px;margin-right:30%;overflow:auto}
+.right{
+ width:30%;
+ background:#111;
+ color:#0f0;
+ padding:12px;
+ position:fixed;
+ right:0;
+ top:0;
+ height:100%;
+ overflow-y:auto;
+}
+.topbar{display:flex;gap:6px;margin-bottom:12px;position:sticky;top:0;background:#f2f2f2;z-index:10}
+.btn{padding:8px 10px;border:none;border-radius:6px;color:#fff;cursor:pointer}
+.btn-blue{background:#0d6efd}.btn-purple{background:#6f42c1}.btn-green{background:#28a745}
+.card{background:#fff;border-radius:10px;padding:12px;margin-bottom:12px;border-left:5px solid #ddd}
+.card.active{border-left:5px solid #28a745;box-shadow:0 0 0 2px #28a74533}
+select,input,textarea,button{width:100%;padding:8px;margin-top:6px;border-radius:6px;border:1px solid #ccc}
+.row{display:flex;gap:6px;margin-top:6px}
+.add{background:#28a745;color:#fff;border:none}
+.del{background:#dc3545;color:#fff;border:none;flex:.5}
+.copy{background:#6c757d;color:#fff;border:none}
+.output{height:38%;background:#000;color:#0f0;font-family:monospace}
+.output2{height:28%;background:#050;color:#aff;font-family:monospace;margin-top:10px}
+.log{margin-top:8px;background:#000;color:#0f0;font-size:12px;padding:6px;height:10%;overflow:auto;border-radius:6px}
+</style>
+</head>
+<body>
+
+<div class="container">
+<div class="left">
+
+<div class="topbar">
+<button class="btn btn-blue" onclick="modeUniversal()">🎬 Universal</button>
+<button class="btn btn-purple" onclick="modeImage()">🖼 สร้างภาพ</button>
+</div>
+
+<div id="menu"></div>
+
+</div>
+
+<div class="right">
+<h2>📄 Prompt Output</h2>
+<textarea id="result" class="output" readonly></textarea>
+<button class="copy" onclick="copyText('result')">📋 Copy</button>
+
+<hr style="border:1px solid #033;margin:12px 0">
+
+<h2>🧟 Horror Image</h2>
+<textarea id="imageResult" class="output2" readonly></textarea>
+
+<div style="position:sticky;bottom:0;background:#111;padding-top:6px">
+<button class="copy" onclick="copyText('imageResult')">📋 Copy Horror Prompt</button>
+</div>
+
+<div class="log" id="log">Ready</div>
+</div>
+</div>
+
+<script>
+const LS="PROMPT_GOD_MODE";
+
+const DEFAULT = {
+ universal:{
+  product:["เสื้อกันฝน"],
+  pain:["กลัวเปียกฝน"],
+  f1:["กันน้ำดี"],
+  f2:["ใส่สบาย"],
+  f3:["พกง่าย"],
+  character:["การ์ตูนน่ารัก"],
+  voice:["เสียงสดใส"],
+  script:["ใครมีปัญหา {pain} {product} ตัวนี้ช่วยได้ {f1} {f2} {f3}"],
+  onscreen:["ตัวหนังสือใหญ่"],
+  camera:["กล้องนิ่ง"]
+ },
+ image:{
+  monster:["demonic brain monster"],
+  product:["Vitamin C Serum"]
+ }
+};
+
+let data = JSON.parse(localStorage.getItem(LS)) || DEFAULT;
+let mode="universal";
+
+function save(){localStorage.setItem(LS,JSON.stringify(data));}
+
+function sec(title,key,list){
+ return `<div class="card active"><h2>${title}</h2>
+ <select id="${key}_s" onchange="update()">${list.map(v=>`<option>${v}</option>`).join("")}</select>
+ <input id="${key}_i" placeholder="เพิ่ม / แก้ไข">
+ <div class="row">
+ <button class="add" onclick="add('${key}')">➕ เพิ่ม</button>
+ <button class="del" onclick="delItem('${key}')">🗑 ลบ</button>
+ </div></div>`;
+}
+
+function render(){
+ if(mode==="universal"){
+  const u=data.universal;
+  menu.innerHTML=
+  sec("📦 สินค้า","product",u.product)+
+  sec("⚠️ ปัญหา","pain",u.pain)+
+  sec("⭐ จุดเด่น 1","f1",u.f1)+
+  sec("⭐ จุดเด่น 2","f2",u.f2)+
+  sec("⭐ จุดเด่น 3","f3",u.f3)+
+  sec("🎨 CHARACTER","character",u.character)+
+  sec("🎤 VOICE","voice",u.voice)+
+  sec("🗣 SCRIPT","script",u.script)+
+  sec("🖥 ONSCREEN","onscreen",u.onscreen)+
+  sec("🎥 CAMERA","camera",u.camera);
+ }else{
+  const i=data.image;
+  menu.innerHTML=
+  sec("👹 MONSTER","monster",i.monster)+
+  sec("🧪 PRODUCT","iproduct",i.product);
+ }
+ update();
+}
+
+function add(k){
+ let arr = mode==="universal"?data.universal[k]:data.image[k==="iproduct"?"product":k];
+ let i=document.getElementById(k+"_i");
+ if(!i.value) return;
+ arr.push(i.value);
+ i.value="";
+ save();render();
+}
+
+function delItem(k){
+ let arr = mode==="universal"?data.universal[k]:data.image[k==="iproduct"?"product":k];
+ let s=document.getElementById(k+"_s");
+ if(!confirm("ลบ "+s.value+"?")) return;
+ arr.splice(s.selectedIndex,1);
+ save();render();
+}
+
+function v(k){
+ return document.getElementById(k+"_s")?.value||"";
+}
+
+function update(){
+ if(mode==="universal"){
+  const p=v("product");
+  const pain=v("pain");
+  const f1=v("f1");
+  const f2=v("f2");
+  const f3=v("f3");
+  const ch=v("character");
+  const vc=v("voice");
+  const sc=v("script");
+  const os=v("onscreen");
+  const cam=v("camera");
+
+  result.value = `
+Vertical 9:16 animated video for TikTok.
+Duration 12–15 seconds
+Ultra cute cartoon advertising style
+2D + 3D hybrid animation
+Chibi proportion character
+Big expressive eyes
+Soft pastel color palette
+Clean modern background
+High clarity
+Smooth animation
+High frame rate
+Designed to maximize watch time and conversion
+
+PRODUCT:
+${p}
+
+PAIN POINT:
+${pain}
+
+FEATURES:
+- ${f1}
+- ${f2}
+- ${f3}
+
+CHARACTER STYLE:
+${ch}
+
+VOICE STYLE:
+${vc}
+
+SCRIPT:
+${sc.replace('{product}',p).replace('{pain}',pain).replace('{f1}',f1).replace('{f2}',f2).replace('{f3}',f3)}
+
+ON-SCREEN TEXT:
+${os}
+
+CAMERA & MOTION:
+${cam}
+
+Extremely similar speaking rhythm, pacing, emotion, energy, and cartoon presentation style to viral TikTok animated product ad
+Fast-paced dialogue
+Strong hook within first 1 second
+Designed for maximum watch time retention
+
+One single animated vide
+Length 12–15 seconds
+Ultra cute cartoon style
+Perfect lip sync
+Viral TikTok style
+High engagement
+High conversion focused.
+  `.trim();
+
+ } else {
+
+  imageResult.value = `Please help create an image ULTRA REALISTIC CINEMATIC HORROR:
+
+${v("monster")}, anatomically accurate, hyper detailed organic textures, wet glossy skin, glowing veins, subsurface scattering flesh, extreme emotional, cinematic horror storytelling,
+
+Dark medical laboratory environment, macro close-up, volumetric lighting, ultra contrast, shallow depth of field,
+
+Presenting ${v("iproduct")}, As shown in the attached image, glowing product aura, salvation vs darkness contrast, shock marketing advertising style,
+
+Ratio 9:16 and 8K hyper realism, ultra sharp focus, cinematic composition, nightmare fuel, viral advertising, extreme engagement, high conversion.`;
+ }
+}
+
+function copyText(id){
+ const r=document.getElementById(id);
+ r.select();navigator.clipboard.writeText(r.value);
+ log("Copy สำเร็จ");
+}
+
+function log(t){
+ logbox.innerHTML+="> "+t+"<br>";
+ logbox.scrollTop=logbox.scrollHeight;
+}
+
+function modeUniversal(){mode="universal";render();}
+function modeImage(){mode="image";render();}
+
+const menu=document.getElementById("menu");
+const result=document.getElementById("result");
+const imageResult=document.getElementById("imageResult");
+const logbox=document.getElementById("log");
+
+render();
+</script>
+
+</body>
+</html>
