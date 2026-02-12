@@ -150,9 +150,9 @@ function update(){
  if(mode==="universal"){
   const p=v("product");
   const pain=v("pain");
-  const f1=v("f1");
-  const f2=v("f2");
-  const f3=v("f3");
+  const f1=v("f1"); // FEATURE
+  const f2=v("f2"); // HORROR STYLE
+  const f3=v("f3"); // PRODUCT PRESENTATION
   const ch=v("character");
   const vc=v("voice");
   const sc=v("script");
@@ -160,90 +160,49 @@ function update(){
   const cam=v("camera");
 
   result.value = `
-Please help create VDO Prompt for SORA Vertical 9:16 animated video for TikTok.
-Duration 12–15 seconds
-Ultra cute cartoon advertising style
-2D + 3D hybrid animation
-Chibi proportion character
-Big expressive eyes
-Soft pastel color palette
-Clean modern background
-High clarity
-Smooth animation
-High frame rate
-Designed to maximize watch time and conversion
+Vertical 9:16 ultra cinematic horror animated commercial video, 12–15 seconds.
 
-PRODUCT:
-${p}
-As shown in the attached image
+[SCENE STYLE]:
+${f2} environment, dark atmosphere, volumetric lighting, ultra contrast, deep shadows, fog, particles, cinematic rim light, macro + wide dynamic camera movement.
 
-PAIN POINT:
-${pain}
+[CHARACTER]:
+${ch}, hyper detailed textures, extreme emotional expression, cinematic animation, horror + cute fusion style, nightmare but viral TikTok friendly design.
 
-FEATURES:
-- ${f1}
+[STORYTELLING]:
+Pain → fear → chaos from ${pain} → sudden appearance of ${p} as divine salvation, dramatic emotional contrast, shock marketing narrative, cinematic climax.
 
-CHARACTER STYLE:
-${ch}
-As shown in the attached image
+[PRODUCT PRESENTATION]:
+${p}, ${f3}, glowing divine aura, holy golden light, floating particles, epic hero shot, premium advertising composition.
 
-HORROR STYLE:
-${f2}
+[CAMERA & MOTION]:
+${cam}, dynamic cinematic movement, speed ramp, dramatic zoom, macro close-ups, smooth cinematic transitions, TikTok viral rhythm.
 
-PRODUCT PRESENTATION:
-${f3}
+[QUALITY]:
+Ultra sharp focus, 8K hyper realism, HDR, cinematic lighting, film grain, epic horror commercial style, high frame rate.
 
-VOICE STYLE:
-${vc}
+[VOICE & DIALOGUE]:
+${vc}, native Thai female voice, ultra energetic, hyper fast pacing, extreme excitement, viral TikTok advertising tone, perfect lip sync, natural Thai accent, cinematic emotional acting.
 
-SCRIPT:
+[SCRIPT]:
 ${sc.replace('{product}',p).replace('{pain}',pain).replace('{f1}',f1).replace('{f2}',f2).replace('{f3}',f3)}
 
-ON-SCREEN TEXT:
-${os}
+[TEXT OVERLAY]:
+${os}, big bold Thai typography, high contrast, kinetic motion text animation, punchy emotional hooks.
 
-CAMERA & MOTION:
-${cam}
-
-The character speaks native Thai language with perfect pronunciation.
-Natural Thai accent.
-Clear articulation.
-Professional female Thai voice actor performance.
-No robotic tone.
-No foreign accent.
-Perfect lip sync matching Thai speech.
-Accurate mouth movement based on Thai phonetics.
-Ultra realistic natural human voice generation.
-Cinematic commercial voice acting.
-High emotional range.
-Extremely strict Thai pronunciation accuracy.
-Perfect Thai intonation.
-
-Extremely similar speaking rhythm, pacing, emotion, energy, and cartoon presentation style to viral TikTok animated product ad
-Fast-paced dialogue
-Strong hook within first 1 second
-Designed for maximum watch time retention.
-
-One single animated vide
-Length 12–15 seconds
-Ultra cute cartoon style
-Perfect lip sync
-Viral TikTok style
-High engagement
-High conversion focused.
+[FINAL BOOST]:
+Strong hook in first 1 second, extreme engagement, viral shock factor, maximum watch time retention, high conversion focused TikTok ad.
   `.trim();
-
- } else {
-
+ }
+ else {
   imageResult.value = `Please help create an image ULTRA REALISTIC CINEMATIC HORROR:
 
 ${v("monster")}, anatomically accurate, hyper detailed organic textures, wet glossy skin, glowing veins, subsurface scattering flesh, extreme emotional, cinematic horror storytelling,
 
 Dark medical laboratory environment, macro close-up, volumetric lighting, ultra contrast, shallow depth of field,
 
-Presenting ${v("iproduct")}, As shown in the attached image, glowing product aura, salvation vs darkness contrast, shock marketing advertising style,
+Presenting ${v("iproduct")}, glowing product aura, salvation vs darkness contrast, shock marketing advertising style,
 
-Ratio 9:16 and 8K hyper realism, ultra sharp focus, cinematic composition, nightmare fuel, viral advertising, extreme engagement, high conversion.`;
+Ratio 9:16, 8K hyper realism, ultra sharp focus, cinematic composition, nightmare fuel, viral advertising, extreme engagement, high conversion.`;
  }
 }
 
