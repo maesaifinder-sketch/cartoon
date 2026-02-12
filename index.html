@@ -95,6 +95,14 @@ const DEFAULT = {
 };
 
 let data = JSON.parse(localStorage.getItem(LS)) || DEFAULT;
+// ===== AUTO DATA MIGRATION PATCH =====
+if(!data.image) data.image = DEFAULT.image;
+
+if(!data.image.horrorStyle){
+ data.image.horrorStyle = [...DEFAULT.image.horrorStyle];
+ save();
+}
+// ====================================
 let mode="universal";
 
 function save(){localStorage.setItem(LS,JSON.stringify(data));}
