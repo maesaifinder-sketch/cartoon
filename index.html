@@ -316,6 +316,74 @@ color:var(--muted);
 margin-top:12px;
 line-height:1.6;
 }
+
+/* ===== AUTO LOCK ===== */
+
+.lock-card{
+
+background:#09173d;
+
+border:1px solid rgba(66,124,255,.35);
+
+border-radius:18px;
+
+padding:18px;
+
+}
+
+.lock-head{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+font-weight:700;
+
+margin-bottom:12px;
+
+}
+
+.lock-head input{
+
+width:18px;
+
+height:18px;
+
+accent-color:#00d084;
+
+}
+
+.auto-badge{
+
+margin-left:auto;
+
+font-size:11px;
+
+padding:4px 10px;
+
+border-radius:999px;
+
+background:rgba(0,208,132,.12);
+
+border:1px solid rgba(0,208,132,.4);
+
+color:#7dffc0;
+
+transition:.25s;
+
+}
+
+.auto-badge.hidden{
+
+opacity:0;
+
+visibility:hidden;
+
+transform:scale(.9);
+
+}
 </style>
 </head>
 
@@ -890,19 +958,37 @@ renderPresets();
 
 </script>
 
-<!-- =========================================
-     PART 4 — LOCK + MULTI SCENE
-========================================= -->
+<!-- =====================================================
+     🔐 AUTO CONTINUITY LOCK
+===================================================== -->
 
 <div class="section">
 
-<h3>🔐 CONTINUITY LOCK — ล็อกความต่อเนื่องทุก Scene</h3>
+<h3>🔐 CONTINUITY LOCK — AUTO LOCK ทุก Scene</h3>
+
+<div class="panel-desc">
+ค่าเริ่มต้นคือ Auto Lock เปิดอยู่ทุกช่อง
+เมื่อกรอกข้อมูล ช่องนั้นจะถูกใช้เป็นค่า Lock อัตโนมัติทุก Scene
+</div>
 
 <div class="grid2">
 
+<!-- Character -->
+
 <div class="lock-card">
 
-<h4>👤 ตัวละคร</h4>
+<label class="lock-head">
+
+<input
+type="checkbox"
+id="autoCharacter"
+checked>
+
+👤 ตัวละคร
+
+<span class="auto-badge">AUTO LOCK</span>
+
+</label>
 
 <textarea
 id="lockCharacter"
@@ -910,9 +996,22 @@ placeholder="รูปลักษณ์ อายุ เสื้อผ้า �
 
 </div>
 
+<!-- Location -->
+
 <div class="lock-card">
 
-<h4>📍 สถานที่</h4>
+<label class="lock-head">
+
+<input
+type="checkbox"
+id="autoLocation"
+checked>
+
+📍 สถานที่
+
+<span class="auto-badge">AUTO LOCK</span>
+
+</label>
 
 <textarea
 id="lockLocation"
@@ -920,9 +1019,22 @@ placeholder="สถานที่ ตำแหน่ง เวลาในเ�
 
 </div>
 
+<!-- Atmosphere -->
+
 <div class="lock-card">
 
-<h4>🌫 บรรยากาศ</h4>
+<label class="lock-head">
+
+<input
+type="checkbox"
+id="autoAtmosphere"
+checked>
+
+🌫 บรรยากาศ
+
+<span class="auto-badge">AUTO LOCK</span>
+
+</label>
 
 <textarea
 id="lockAtmosphere"
@@ -930,13 +1042,26 @@ placeholder="อารมณ์ แสง สี ความรู้สึก"
 
 </div>
 
+<!-- Environment -->
+
 <div class="lock-card">
 
-<h4>🏠 สภาพแวดล้อม</h4>
+<label class="lock-head">
+
+<input
+type="checkbox"
+id="autoEnvironment"
+checked>
+
+🏠 สภาพแวดล้อม
+
+<span class="auto-badge">AUTO LOCK</span>
+
+</label>
 
 <textarea
 id="lockEnvironment"
-placeholder="วัตถุ ฉากหลัง สภาพพื้นที่ สิ่งที่ต้องคงเดิม"></textarea>
+placeholder="วัตถุ ฉากหลัง พื้นที่ สิ่งที่ต้องคงเดิม"></textarea>
 
 </div>
 
@@ -944,8 +1069,7 @@ placeholder="วัตถุ ฉากหลัง สภาพพื้นท�
 
 <div class="footer-note">
 
-เมื่อ Lock แล้วทุก Scene ต้องอ้างอิงค่าเดิม
-เว้นแต่ Story ระบุ "การเปลี่ยนแปลง" อย่างชัดเจน
+Auto Lock จะอ้างอิงค่าชุดเดิมทุก Scene จนกว่าจะมีการเปลี่ยนแปลงใน Story
 
 </div>
 
@@ -1562,6 +1686,72 @@ loadMaster();
 });
 
 /* =====================================================
+   AUTO CONTINUITY LOCK ENGINE
+===================================================== */
+
+const AUTO_LOCK_IDS=[
+
+["autoCharacter","lockCharacter"],
+
+["autoLocation","lockLocation"],
+
+["autoAtmosphere","lockAtmosphere"],
+
+["autoEnvironment","lockEnvironment"]
+
+];
+
+function updateAutoLockUI(){
+
+AUTO_LOCK_IDS.forEach(([checkId,textId])=>{
+
+const c=document.getElementById(checkId);
+
+const t=document.getElementById(textId);
+
+const badge=c?.parentElement?.querySelector(".auto-badge");
+
+if(!c||!t)return;
+
+if(t.value.trim()){
+
+c.style.display="none";
+
+badge?.classList.add("hidden");
+
+}else{
+
+c.style.display="inline-block";
+
+badge?.classList.remove("hidden");
+
+}
+
+});
+
+}
+
+AUTO_LOCK_IDS.forEach(([checkId,textId])=>{
+
+const c=document.getElementById(checkId);
+
+const t=document.getElementById(textId);
+
+if(!c||!t)return;
+
+t.addEventListener("input",()=>{
+
+updateAutoLockUI();
+
+saveAutoLock();
+
+});
+
+c.addEventListener("change",saveAutoLock);
+
+});
+
+/* =====================================================
    PROMPT BUILDER
 ===================================================== */
 
@@ -1578,10 +1768,17 @@ const voice=document.getElementById("voiceDNA").value;
 
 const visual=document.getElementById("visualStyle").value;
 
-const character=document.getElementById("lockCharacter").value.trim();
-const location=document.getElementById("lockLocation").value.trim();
-const atmosphere=document.getElementById("lockAtmosphere").value.trim();
-const environment=document.getElementById("lockEnvironment").value.trim();
+const character=document.getElementById("autoCharacter").checked
+?document.getElementById("lockCharacter").value.trim():"";
+
+const location=document.getElementById("autoLocation").checked
+?document.getElementById("lockLocation").value.trim():"";
+
+const atmosphere=document.getElementById("autoAtmosphere").checked
+?document.getElementById("lockAtmosphere").value.trim():"";
+
+const environment=document.getElementById("autoEnvironment").checked
+?document.getElementById("lockEnvironment").value.trim():"";
 
 const rhythm=document.getElementById("speechRhythm").value;
 const speech=document.getElementById("speechStyle").value;
@@ -2242,6 +2439,8 @@ NEXT SCENE HANDOFF:
 
 function generateCurrentScene(){
 
+saveAutoLock();
+
 const scene=getCurrentScene();
 
 document.getElementById("promptOutput").textContent=
@@ -2254,6 +2453,8 @@ refreshStatus();
 /* ---------- ต่อ ---------- */
 
 function continueScene(){
+
+saveAutoLock();
 
 let scene=getCurrentScene();
 const total=getSceneCount();
@@ -2593,6 +2794,56 @@ reader.readAsText(file);
 }
 
 /* =====================================================
+   AUTO LOCK STORAGE
+===================================================== */
+
+const AUTO_LOCK_KEY="AUTO_LOCK_V9";
+
+const AUTO_LOCK_IDS=[
+ ["lockCharacter","lockCharacterText"],
+ ["lockLocation","lockLocationText"],
+ ["lockAtmosphere","lockAtmosphereText"],
+ ["lockEnvironment","lockEnvironmentText"]
+];
+
+function saveAutoLock(){
+
+ const data={};
+
+ AUTO_LOCK_IDS.forEach(([check,text])=>{
+   const c=document.getElementById(check);
+   const t=document.getElementById(text);
+
+   data[check]=c?c.checked:true;
+   data[text]=t?t.value:"";
+ });
+
+ localStorage.setItem(AUTO_LOCK_KEY,JSON.stringify(data));
+}
+
+function loadAutoLock(){
+
+ const raw=localStorage.getItem(AUTO_LOCK_KEY);
+
+ if(raw){
+   try{
+     const data=JSON.parse(raw);
+
+     AUTO_LOCK_IDS.forEach(([check,text])=>{
+       const c=document.getElementById(check);
+       const t=document.getElementById(text);
+
+       if(c && data[check]!==undefined) c.checked=data[check];
+       if(t && data[text]!==undefined) t.value=data[text];
+     });
+
+   }catch(e){}
+ }
+
+ updateAutoLockUI();
+}
+
+/* =====================================================
    SAFE BUILD PROMPT
 ===================================================== */
 
@@ -2727,6 +2978,8 @@ renderPresets();
 loadMaster();
 
 restoreForm();
+
+loadAutoLock();
 
 updateSceneBadge();
 
