@@ -40,13 +40,20 @@ textarea{resize:vertical}
 .card h2{font-size:14px;margin:0 0 8px}
 .card .row{display:flex;gap:6px;margin-top:7px}.card .row>*{flex:1}
 .hint{color:var(--muted);font-size:11px;line-height:1.5}
-.btn{padding:9px 11px;border-radius:10px}.add{background:#13b97f}.edit{background:#4869d8}.del{background:#c93747}.secondary{background:#303a5d}.copy{background:#424d70}
+.btn{padding:9px 11px;border-radius:10px;color:#fff !important}
+.btn-purple{background:linear-gradient(135deg,#6b4cff,#934fff) !important;color:#fff !important}
+.btn-orange{background:linear-gradient(135deg,#f06a34,#ff9a43) !important;color:#fff !important}
+.secondary{background:#303a5d !important;color:#fff !important}
+.copy{background:#424d70 !important;color:#fff !important}
+.master-actions .btn{min-height:36px;text-shadow:0 1px 1px rgba(0,0,0,.28)}
+.scene-tools .secondary,.scene-tools .all{color:#fff !important}.add{background:#13b97f}.edit{background:#4869d8}.del{background:#c93747}.secondary{background:#303a5d}.copy{background:#424d70}
 .preset-tags .tag,.tag{display:inline-block;padding:3px 7px;border-radius:999px;background:#1d2b52;color:#b9d9ff;font-size:10px;margin:3px 3px 0 0}
 .master-panel{background:linear-gradient(180deg,#17153c,#11142e);border:1px solid #7658d8;border-radius:14px;padding:12px;box-shadow:0 0 22px rgba(111,74,255,.11)}
 .master-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.master-title{font-weight:900}.master-sub{font-size:10px;color:var(--muted);margin-top:2px}
 .lock-badge,.lock-chip{white-space:nowrap;font-size:10px;padding:5px 8px;border-radius:999px;background:#153b35;color:#8ff5d1;border:1px solid #1fc995}
 .master-editor{min-height:180px;margin-top:8px;background:#090d20;color:#d2ffe9;border:1px solid #4e427e;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.4}
 .master-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:7px}.master-actions button{font-size:10px;padding:8px}
+.master-actions .btn-purple{background:linear-gradient(135deg,#6b4cff,#934fff);color:#fff}.master-actions .btn-orange{background:linear-gradient(135deg,#e86b2f,#ff9a43);color:#fff}.master-actions .secondary{background:#303a5d;color:#fff}
 .master-status{font-size:10px;color:#86dcca;margin-top:6px}
 .lock-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lock-box{background:#0d1430;border:1px solid #2b3964;border-radius:12px;padding:9px}.lock-box label{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750}.lock-box input[type=checkbox]{width:auto;accent-color:#20d39d}.lock-box textarea{margin-top:7px;min-height:62px;font-size:11px}
 .scene-fixed{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#111a37;border:1px solid #34446f;border-radius:11px;padding:9px 11px}.scene-fixed strong{color:#8bdcff}
@@ -61,6 +68,10 @@ textarea{resize:vertical}
 .info{font-size:10px;color:#aeb9da;line-height:1.55;background:#0c1430;border:1px solid #25365f;border-radius:10px;padding:9px}
 @media(max-width:1050px){.two-frame{grid-template-columns:1fr}.output-panel{height:680px}.header{align-items:flex-start;flex-direction:column}}
 @media(max-width:620px){body{padding:7px}.lock-grid,.style-grid,.scene-tools{grid-template-columns:1fr}.master-actions{grid-template-columns:1fr}.frame{border-radius:14px}}
+
+button:disabled{opacity:.55;cursor:not-allowed;color:#dce3ff !important}
+.topbar button,.scene-tools button,.output-actions button,.master-actions button{color:#fff !important}
+
 </style>
 </head>
 <body>
@@ -278,7 +289,27 @@ ADAPTIVE RULE:
 const MASTER_KEY = 'STORY_STRUCTURE_MASTER_V5';
 let masterStructure = localStorage.getItem(MASTER_KEY) || DEFAULT_MASTER_STRUCTURE;
 
-let presets=JSON.parse(localStorage.getItem(PS)||'null')||defaultPresets;
+function loadPresetsSafe(){
+  try{
+    const raw=localStorage.getItem(PS);
+    if(!raw) return {...defaultPresets};
+    const parsed=JSON.parse(raw);
+    if(!parsed || typeof parsed!=='object' || Array.isArray(parsed) || Object.keys(parsed).length===0) return {...defaultPresets};
+    // กรอง preset ที่ข้อมูลไม่ครบ และเติม default หาก localStorage เก่ามีข้อมูลเสีย
+    const valid={};
+    Object.keys(parsed).forEach(k=>{
+      const p=parsed[k];
+      if(p && typeof p==='object' && String(p.name||'').trim() && String(p.text||'').trim()) valid[k]=p;
+    });
+    return Object.keys(valid).length ? valid : {...defaultPresets};
+  }catch(e){
+    return {...defaultPresets};
+  }
+}
+let presets=loadPresetsSafe();
+// ถ้า localStorage เคยเก็บค่า {} หรือ preset เสีย ให้เขียนค่าเริ่มต้นกลับทันที
+if(!Object.keys(presets).length) presets={...defaultPresets};
+localStorage.setItem(PS,JSON.stringify(presets));
 let data=JSON.parse(localStorage.getItem(LS)||'null')||{
  topic:{enabled:true,items:[{name:'หัวข้อเรื่อง',text:''}]},
  context:{enabled:true,items:[{name:'ข้อมูลเพิ่มเติม',text:''}]},
@@ -309,6 +340,42 @@ function render(){
     section('❤️ Emotional Target','emotion');
   buildPrompt();
 }
+
+function renderPresets(){
+  const select=document.getElementById('presetSelect');
+  const tags=document.getElementById('presetTags');
+  if(!select)return;
+  let keys=Object.keys(presets).filter(k=>presets[k] && presets[k].name && presets[k].text);
+  if(!keys.length){
+    presets={...defaultPresets};
+    keys=Object.keys(presets);
+    localStorage.setItem(PS,JSON.stringify(presets));
+  }
+  select.innerHTML=keys.map(k=>`<option value="${esc(k)}">${esc(presets[k].name)}</option>`).join('');
+  const current=localStorage.getItem('STORY_ACTIVE_PRESET_V5')||keys[0];
+  select.value=keys.includes(current)?current:keys[0];
+  const p=presets[select.value];
+  if(tags && p){
+    tags.innerHTML=(p.text.match(/(?:3D|RAW|COMEDY|DRAMA|HORROR|MYSTERY|TWIST|EMOTIONAL|FIRST PERSON|CONVERSATIONAL)/gi)||[])
+      .slice(0,8).map(x=>`<span class="tag">${esc(x)}</span>`).join('');
+  }
+}
+
+function loadPreset(){
+  const select=document.getElementById('presetSelect');
+  if(!select)return;
+  const p=presets[select.value];
+  if(!p)return;
+  localStorage.setItem('STORY_ACTIVE_PRESET_V5',select.value);
+  const tags=document.getElementById('presetTags');
+  if(tags){
+    const tagsFound=(p.text.match(/(?:3D|RAW|COMEDY|DRAMA|HORROR|MYSTERY|TWIST|EMOTIONAL|FIRST PERSON|CONVERSATIONAL)/gi)||[]);
+    tags.innerHTML=[...new Set(tagsFound)].slice(0,8).map(x=>`<span class="tag">${esc(x)}</span>`).join('');
+  }
+  // Preset เป็น Story Style DNA ไม่เขียนทับ Master Structure หรือ Scene Locks
+  buildPrompt();
+}
+
 function openPresetModal(){editKey=null;document.getElementById('presetTitle').innerText='➕ เพิ่ม Story Preset';document.getElementById('presetName').value='';document.getElementById('presetText').value='';document.getElementById('presetModal').classList.add('show')}
 function editPresetModal(){let k=document.getElementById('presetSelect').value,p=presets[k];if(!p)return;editKey=k;document.getElementById('presetTitle').innerText='✏️ แก้ไข Story Preset';document.getElementById('presetName').value=p.name;document.getElementById('presetText').value=p.text;document.getElementById('presetModal').classList.add('show')}
 function closePresetModal(){document.getElementById('presetModal').classList.remove('show')}
@@ -483,6 +550,9 @@ function buildPrompt(){
   const topic=get('topic'),context=get('context'),facts=get('facts'),type=get('type'),
         angle=get('angle'),pov=get('pov'),emotion=get('emotion'),structure=masterStructure,
         scenes=getSceneCount(),locks=getContinuityLocks(),dna=getDeliveryDNA(),visual=getVisualStyle();
+  const activePresetKey=document.getElementById('presetSelect')?.value;
+  const activePreset=presets[activePresetKey]||{};
+  const presetDNA=activePreset.text||'[AUTO STORY STYLE]';
   const speed=dna.speed, words=sceneWordsFor10Sec(speed);
 
   const prompt=`######
@@ -493,6 +563,14 @@ TOPIC → STORY → MASTER STRUCTURE → SCENE CONTINUITY → CHATGPT
 ROLE:
 คุณคือ AI Story Architect, Narrative Director, Thai Conversational Storyteller,
 Multi-Scene Continuity Director, Voice Delivery Director และ VDO Prompt Engineer
+
+==================================================
+STORY STYLE PRESET — ACTIVE
+==================================================
+
+${presetDNA}
+
+Preset นี้ควบคุมสไตล์การเล่าเท่านั้น และไม่มีสิทธิ์ override STORY STRUCTURE กลาง, Continuity Lock, Voice & Delivery Lock หรือเวลา 10 วินาที
 
 ==================================================
 ABSOLUTE MASTER RULE — PRIORITY #1
@@ -1161,10 +1239,22 @@ function resetSceneProgress(){
 }
 
 
-function copyText(){navigator.clipboard.writeText(result.value).then(()=>alert('Copy Story Structure Prompt สำเร็จ'))}
+async function copyText(){
+  const text=result.value||'';
+  if(!text)return alert('ยังไม่มี Prompt ให้ Copy');
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('Copy Prompt สำเร็จ');
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');ta.remove();
+    alert('Copy Prompt สำเร็จ');
+  }
+}
 function clearData(){
   if(!confirm('รีเซ็ต Story Builder ทั้งหมด รวม Master Structure และ Scene Progress?'))return;
-  localStorage.removeItem(LS);localStorage.removeItem(PS);localStorage.removeItem(MASTER_KEY);localStorage.removeItem('STORY_UI_STATE_V5');resetSceneProgress();location.reload();
+  localStorage.removeItem(LS);localStorage.removeItem(PS);localStorage.removeItem(MASTER_KEY);localStorage.removeItem('STORY_UI_STATE_V5');localStorage.removeItem('STORY_ACTIVE_PRESET_V5');resetSceneProgress();location.reload();
 }
 
 function loadUiState(){
@@ -1188,7 +1278,7 @@ document.addEventListener('change',function(e){
     else updateSceneBadge();
   }
 });
-renderPresets();modeTopic();initMasterUI();loadUiState();buildPrompt();updateSceneBadge();
+modeTopic();initMasterUI();loadUiState();renderPresets();loadPreset();buildPrompt();updateSceneBadge();
 
 </script>
 </body>
