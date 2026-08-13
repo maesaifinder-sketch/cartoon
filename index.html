@@ -3,600 +3,565 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Index PRO+ – TikTok Feed Intelligence</title>
-
+<title>AI Story Structure Builder PRO+</title>
 <style>
-body{margin:0;font-family:system-ui;background:#f1f5f9}
-header{background:#020617;color:#fff;padding:20px}
-.container{max-width:1500px;margin:auto;padding:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
-.stat{font-size:30px;font-weight:900}
-.badge{padding:4px 10px;border-radius:20px;font-size:12px;background:#e5e7eb}
-table{width:100%;border-collapse:collapse}
-th,td{padding:12px;border-bottom:1px solid #eee}
-th{background:#f8fafc}
-.foi{font-size:22px;font-weight:900}
+:root{--bg:#071116;--card:#0d2026;--card2:#102a31;--line:#4fd1c5;--text:#eaffff;--muted:#9bb7bc;--green:#20c997;--blue:#0d6efd;--purple:#7c4dff;--orange:#ff922b;--red:#dc3545}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(circle at 10% 5%,rgba(79,209,197,.16),transparent 30%),radial-gradient(circle at 90% 5%,rgba(124,77,255,.12),transparent 30%),linear-gradient(180deg,#071116,#061015);color:var(--text)}
+.container{display:flex;min-height:100vh}.left{width:68%;padding:12px;margin-right:32%;overflow:auto}.right{width:32%;position:fixed;right:0;top:0;height:100vh;padding:12px;background:#050909;border-left:1px solid #173238;display:flex;flex-direction:column;gap:8px}
+.topbar{display:flex;gap:6px;position:sticky;top:0;z-index:20;padding-bottom:10px;background:linear-gradient(180deg,#071116 80%,transparent)}button,select,input,textarea{font:inherit;border-radius:8px;border:1px solid #789196;padding:9px}button{cursor:pointer;font-weight:700}select,input,textarea{width:100%;background:#f5f7f7;color:#111}button{color:#fff;border:0}.btn-blue{background:var(--blue)}.btn-purple{background:var(--purple)}.btn-green{background:#20a15a}.btn-orange{background:var(--orange)}.active-mode{outline:3px solid #5fd3c6;box-shadow:0 0 16px rgba(95,211,198,.55)}
+.card{background:linear-gradient(180deg,rgba(13,32,38,.97),rgba(8,24,29,.98));border:1px solid #21434a;border-left:5px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}.card h2{font-size:16px;margin:0 0 8px}.hint{color:var(--muted);font-size:12px;line-height:1.5}.row{display:flex;gap:6px}.row>*{flex:1}.add{background:#159957}.edit{background:#0d6efd}.del{background:var(--red)}.copy{background:#59636a}.generate{background:linear-gradient(90deg,#20c997,#0d6efd);font-size:16px;padding:12px}.secondary{background:#26373c}.hidden{display:none!important}
+.master-panel{background:linear-gradient(180deg,#101d23,#071114);border:1px solid #7c4dff;border-radius:12px;padding:10px;box-shadow:0 0 18px rgba(124,77,255,.12)}
+.master-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.master-title{font-weight:800;font-size:14px}
+.master-sub{font-size:10px;color:#9bb7bc;margin-top:3px;line-height:1.4}
+.lock-badge{white-space:nowrap;font-size:10px;padding:4px 7px;border-radius:999px;background:#163c32;color:#8ff5ce;border:1px solid #20c997}
+.master-editor{width:100%;min-height:180px;margin-top:8px;background:#020607;color:#bfffea;border:1px solid #2f625e;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.35;resize:vertical}
+.master-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:6px}
+.master-actions button{font-size:10px;padding:7px}
+.master-status{font-size:10px;color:#82d8cf;margin-top:6px}
+@media(max-width:900px){.master-actions{grid-template-columns:1fr}}
 
-button,input,select,textarea{
-  padding:10px;border-radius:10px;border:1px solid #cbd5f5;font-family:inherit
-}
-button{background:#020617;color:#fff;cursor:pointer}
-button.secondary{background:#475569}
-button.danger{background:#dc2626}
-textarea{width:100%;min-height:160px}
-small{color:#64748b}
-hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}
-
-/* CATEGORY SCROLL */
-.cat-scroll{max-height:260px;overflow-y:auto;padding-right:6px}
-.cat-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-
-.thumb{
-  width:48px;
-  height:48px;
-  object-fit:cover;
-  border-radius:8px;
-  border:1px solid #e5e7eb;
-  cursor:pointer;
-  transition:.15s;
-}
-
-.thumb:hover{
-  transform:scale(2);
-  z-index:10;
-  box-shadow:0 8px 24px rgba(0,0,0,.2);
-}
-
-/* ===== Kalodata Pagination ===== */
-.pagination{
-  display:flex;
-  gap:6px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-.page-btn{
-  min-width:36px;
-  padding:6px 10px;
-  border-radius:8px;
-  border:1px solid #cbd5f5;
-  background:#fff;
-  cursor:pointer;
-  font-weight:600;
-  color:#020617; /* 👈 เพิ่มบรรทัดนี้ */
-}
-
-.page-btn.active{
-  background:#020617;
-  color:#fff; /* 👈 ระบุชัด */
-}
-.page-btn.active{
-  background:#020617;
-  color:#fff;
-}
-.page-btn:disabled{
-  opacity:.4;
-  cursor:not-allowed;
-}
-.page-info{
-  font-size:14px;
-  color:#64748b;
-}
-.product-btn{
-  display:inline-block;
-  padding:4px 10px;
-  font-size:12px;
-  font-weight:600;
-  border-radius:999px;
-  background:#ecfeff;
-  color:#0369a1;
-  border:1px solid #67e8f9;
-  text-decoration:none;
-}
-.product-btn:hover{
-  background:#cffafe;
-}
-
+.output{flex:1;min-height:0;background:#020505;color:#8dff8d;border:1px solid #1e3b24;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;resize:none;line-height:1.45}.status{font-size:12px;color:#8fd3d0}.tag{display:inline-block;padding:3px 7px;border-radius:999px;background:#17353b;color:#9ff7ed;font-size:11px;margin:2px}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:999;align-items:center;justify-content:center}.modal.show{display:flex}.modal-box{width:min(760px,94vw);background:#0d2228;border:2px solid var(--line);border-radius:16px;padding:16px}.modal-actions{display:flex;gap:8px;margin-top:8px}.modal-actions>*{flex:1}
+@media(max-width:900px){.left{width:100%;margin-right:0}.right{position:relative;width:100%;height:520px;border-left:0}.container{display:block}.topbar{overflow:auto}.topbar button{min-width:120px}}
 </style>
 </head>
-
 <body>
-
-<header>
-  <h1>🚀 BedStyleMarket – Feed Opportunity Index</h1>
-  <small>Kalodata-style | Affiliate Intelligence | No API</small>
-</header>
-
 <div class="container">
-
-<!-- DASHBOARD -->
-<div class="grid">
-  <div class="card"><h3>📦 สินค้าทั้งหมด</h3><div class="stat" id="total">0</div></div>
-  <div class="card"><h3>🚀 FOI ≥ 75</h3><div class="stat" id="easy">0</div></div>
-  <div class="card"><h3>💰 ROI สูง</h3><div class="stat" id="roiHigh">0</div></div>
-  <div class="card"><h3>🔥 หมวดมาแรง</h3><div class="stat" id="topCat">-</div></div>
+<section class="left">
+<div class="topbar">
+<button class="btn-blue" id="btnTopic" onclick="modeTopic()">📝 สร้างเรื่อง</button>
+<button class="btn-purple" id="btnRef" onclick="modeReference()">🎧 Reference</button>
+<button class="btn-orange" id="btnVdo" onclick="modeVdo()">🎬 VDO</button>
+<button class="btn-green" onclick="window.location.href='https://gemini-prompt-pro.web.app/'">⌂ หน้าหลัก</button>
 </div>
 
-<br>
-
-<!-- FILTER -->
-<div class="card">
-  <input id="search" placeholder="ค้นหาสินค้า">
-  <select id="catFilter"></select>
-  <button onclick="apply()">Filter</button>
-  <button class="secondary" onclick="exportCSV()">Export CSV</button>
-  <button class="secondary" onclick="selectPage()">☑️ ALL</button>
-  <button class="secondary" onclick="clearSelected()">❌ ล้างที่เลือก</button>
-  <button class="danger" onclick="clearData()">🧹 เคลียร์ข้อมูล</button>
+<div class="card" id="presetCard">
+<h2>🧬 Story Style Preset</h2>
+<select id="presetSelect" onchange="loadPreset()"></select>
+<div class="row"><button class="add" onclick="openPresetModal()">➕ เพิ่ม</button><button class="edit" onclick="editPresetModal()">✏️ แก้ไข</button><button class="del" onclick="deletePreset()">🗑 ลบ</button></div>
+<div id="presetTags"></div>
 </div>
 
-<br>
+<div id="menu"></div>
+</section>
 
-<!-- CATEGORY -->
-<div class="card">
-  <h3>🗂 จัดการหมวดหมู่</h3>
-  <input id="catName" placeholder="ชื่อหมวด">
-  <input id="catRegex" placeholder="Keyword / Regex">
-  <button onclick="addCategory()">➕ เพิ่มหมวด</button>
-  <hr>
-  <div id="catList" class="cat-scroll"></div>
-</div>
+<aside class="right">
+<h2 style="margin:0">🧠 STORY STRUCTURE BUILDER</h2>
 
-<br>
-
-<!-- TABLE -->
-<div class="card">
-<table>
-<thead>
-<tr>
-  <th>เลือก</th>
-  <th>#</th>
-  <th>รูป</th>
-  <th>Name</th>
-  <th>ID</th>
-  <th>Link</th>
-</tr>
-</thead>
-<tbody id="tb"></tbody>
-</table>
-
-<!-- Pagination -->
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px">
-  <div class="pagination" id="pagination"></div>
-  <div class="page-info">
-    แสดง
-    <select id="pageSize" onchange="changePageSize()">
-      <option>20</option>
-      <option>50</option>
-      <option>100</option>
-    </select>
-    รายการ / หน้า
+<div class="master-panel">
+  <div class="master-head">
+    <div>
+      <div class="master-title">🧬 STORY STRUCTURE กลาง</div>
+      <div class="master-sub">MASTER STRUCTURE • Generator ทุกตัวต้องอ่านก่อนสร้าง Prompt</div>
+    </div>
+    <span id="masterLock" class="lock-badge">🔒 MASTER LOCKED</span>
   </div>
-</div>
-</div>
-
-<br>
-
-<!-- GPT -->
-<div class="card">
-  <h3>🧠 Send to GPT</h3>
-  <textarea id="gptPrompt"></textarea>
-  <div style="display:flex;gap:10px;align-items:center;margin-top:10px">
-    <button onclick="sendToGPT()">📤 Copy Text</button>
-    <button class="secondary" onclick="exportGPTCSV()">⬇️ Export CSV</button>
+  <textarea id="masterStructure" class="master-editor" spellcheck="false"></textarea>
+  <div class="master-actions">
+    <button class="btn-purple" onclick="saveMasterStructure()">💾 บันทึก Master</button>
+    <button class="btn-orange" onclick="importCurrentStructure()">⬇️ ใช้ Structure ปัจจุบัน</button>
+    <button class="secondary" onclick="resetMasterStructure()">↺ คืนค่า Master</button>
   </div>
+  <div id="masterStatus" class="master-status">Master Structure พร้อมใช้งาน</div>
 </div>
 
+<div class="status" id="status">พร้อมสร้าง Prompt</div>
+<textarea id="result" class="output" readonly></textarea>
+<div class="row"><button class="copy" onclick="copyText()">📋 Copy Prompt</button><button class="generate" onclick="buildPrompt()">⚡ สร้าง Prompt</button></div>
+<button class="secondary" onclick="clearData()">↻ รีเซ็ตข้อมูล</button>
+</aside>
 </div>
+
+<div class="modal" id="presetModal"><div class="modal-box"><h2 id="presetTitle">Preset</h2><input id="presetName" placeholder="ชื่อ Preset"><textarea id="presetText" rows="12" placeholder="Story Style DNA"></textarea><div class="modal-actions"><button class="add" onclick="savePresetModal()">💾 บันทึก</button><button class="del" onclick="closePresetModal()">❌ ปิด</button></div></div></div>
+<div class="modal" id="itemModal"><div class="modal-box"><h2 id="itemTitle">เพิ่มข้อมูล</h2><input id="itemName" placeholder="ชื่อที่แสดง"><textarea id="itemText" rows="10" placeholder="รายละเอียด"></textarea><div class="modal-actions"><button class="add" onclick="saveItemModal()">💾 บันทึก</button><button class="del" onclick="closeItemModal()">❌ ปิด</button></div></div></div>
 
 <script>
-/* ================= CONFIG ================= */
-const DB_ROOT="https://bedstylemarket-default-rtdb.asia-southeast1.firebasedatabase.app";
-const IMPORT_PATH="/imports.json";
+const LS='STORY_STRUCTURE_BUILDER_DATA_V4_MASTER';
+const PS='STORY_STRUCTURE_PRESETS_V4_MASTER';
+let mode='topic', editKey=null, editIndex=-1;
+const defaultPresets={
+ raw:{name:'🔥 Raw เพื่อนเล่าให้เพื่อนฟัง',text:'RAW CONVERSATIONAL STORYTELLING. เล่าเหมือนกูนั่งเมาท์ให้มึงฟัง. ใช้ภาษาพูดจริง กู มึง แม่ง ว่ะ เออ คือ แบบ ตามธรรมชาติ. มีคำซ้ำและ pause เล็กน้อยได้. ห้ามยัดคำหยาบทุกประโยค. เน้นชีวิตจริง ความคิดในหัว ปฏิกิริยา และรายละเอียดเล็ก ๆ ที่ทำให้เรื่องดูจริง. ใช้ Open Loop และ Information Delay แบบไม่ฝืน. จังหวะสั้น-ยาวสลับกัน. เร่งเมื่อเรื่องพีค ผ่อนเมื่อสร้างอารมณ์. Ending ต้องเป็นธรรมชาติ ไม่สรุปเหมือนบทความ.'},
+ comedy:{name:'😂 Comedy / กวน / พีค',text:'COMEDY STORY DNA. เปิดด้วยสถานการณ์หรือประโยคที่ชวนสงสัย. สร้าง Setup ให้คนเข้าใจผิดได้. ค่อย ๆ เพิ่มความ absurd หรือความซวย. ใช้ reaction เป็นตัวขยายมุก. เก็บ Punchline ไว้ให้ถึงจังหวะ. ห้ามยิงมุกทุกประโยค. ให้เรื่องเดินก่อน แล้วมุกเกิดจากเหตุการณ์.'},
+ horror:{name:'👻 Horror / หลอน / Mystery',text:'HORROR STORY DNA. เริ่มจากเหตุการณ์ธรรมดา. ใส่รายละเอียดเล็ก ๆ ที่ผิดปกติ. ไม่รีบเฉลย. ใช้ silence, pause, negative space และ information delay. ค่อย ๆ เพิ่มความผิดปกติ. ให้ผู้ฟังสงสัยก่อนกลัว. Reveal ต้องมีเหตุผลจากสิ่งที่ปูไว้. Ending อาจทิ้งความรู้สึกค้าง.'},
+ drama:{name:'💔 Drama / Emotional',text:'EMOTIONAL STORY DNA. เน้นความเป็นมนุษย์และความสัมพันธ์. ใช้รายละเอียดจริงและความคิดในใจ. ไม่บังคับร้องไห้หรือสรุปข้อคิด. สร้าง emotional change จากเหตุการณ์. จุดพีคคือความจริงหรือความรู้สึกที่ถูกเปิดเผย. จบด้วย realization หรือประโยคสั้น ๆ ที่มีน้ำหนัก.'},
+ twist:{name:'🌀 Mystery / Twist',text:'TWIST STORY DNA. สร้างคำถามตั้งแต่ต้น. ให้ข้อมูลเพียงบางส่วน. ใช้รายละเอียดที่ดูธรรมดาเป็น clue. ทำให้ผู้ฟังเชื่อคำอธิบายหนึ่งก่อน. ค่อย reveal ข้อมูลที่เปลี่ยนความหมายของเรื่อง. Twist ต้องย้อนกลับไปอธิบายสิ่งที่เห็นก่อนหน้าได้. Payoff ต้องคุ้มกับ Open Loop.'},
+ experience:{name:'🗣️ ประสบการณ์จริง / Confession',text:'PERSONAL EXPERIENCE DNA. เล่าแบบ FIRST PERSON. ใช้ความคิดและ reaction ของผู้เล่า. รักษาความไม่สมบูรณ์ของภาษาพูด. ให้เหตุการณ์เป็นตัวเดินเรื่อง. ไม่แต่งข้อเท็จจริงหากผู้ใช้ระบุว่าเรื่องจริง. เน้นรายละเอียดเฉพาะที่ทำให้ผู้ฟังรู้สึกว่าอยู่ตรงนั้นด้วย.'}
+};
+;
+const DEFAULT_MASTER_STRUCTURE = `UNIVERSAL STORY STRUCTURE กลาง
 
-/* ================= PRODUCT LINK ================= */
-function buildProductLink(p){
-  if(!p) return "";
-  const pid = (p.product_id || p.productId || p.id || p.pid || "").toString().replace(/[^\d]/g,"");
-  if(pid){
-    return `https://shop.tiktok.com/view/product/${pid}?region=TH&locale=th-TH&source=agency`;
-  }
-  return "";
-}
+01 ATTENTION / INTERRUPT
+02 CONTEXT / HUMAN SETUP
+03 TRIGGERING EVENT
+04 REACTION
+05 ESCALATION
+06 OPEN LOOP / INFORMATION DELAY
+07 REVELATION / TURNING POINT
+08 TWIST OR EMOTIONAL CLIMAX
+09 PAYOFF
+10 REFLECTION / CALLBACK
+11 NATURAL ENDING
 
-/* ================= IMAGE LINK (HI-RES) ================= */
-function getHiResImage(url){
-  if(!url) return "";
-  return url.replace(/resize-jpeg:\d+:\d+/i, "resize-jpeg:800:800");
-}
+ADAPTIVE RULE:
+ไม่จำเป็นต้องใช้ทุก Stage หากไม่เหมาะกับเรื่อง แต่ห้ามทำลายลำดับ Narrative, Emotional Arc, Information Release และ Payoff`;
 
-/* ================= PAGINATION STATE ================= */
-let CURRENT_PAGE=1;
-let PAGE_SIZE=20;
-let FILTERED_DATA=[];
+const MASTER_KEY = 'STORY_STRUCTURE_MASTER_V4';
+let masterStructure = localStorage.getItem(MASTER_KEY) || DEFAULT_MASTER_STRUCTURE;
 
-/* ================= SELECT STATE ================= */
-const SELECT_KEY = "INDEX_PRO_SELECTED";
-let SELECTED = new Set(JSON.parse(localStorage.getItem(SELECT_KEY) || "[]"));
-
-function saveSelected(){
-  localStorage.setItem(SELECT_KEY, JSON.stringify([...SELECTED]));
-}
-
-/* ================= CATEGORY ================= */
-const CAT_PATH = "/categories.json";
-
-let CATEGORIES = [];
-let DATA=[];
-
-async function loadCategories(){
-  const r = await fetch(DB_ROOT + CAT_PATH);
-  const j = await r.json();
-  CATEGORIES = j
-  ? Object.entries(j).map(([id, c]) => ({ id, ...c }))
-  : [];
-  renderCatManager();
-}
-
-async function addCategory(){
-  if(!catName.value || !catRegex.value) return;
-
-  await fetch(DB_ROOT + "/categories.json",{
-    method:"POST",
-    body: JSON.stringify({
-      name: catName.value,
-      regex: catRegex.value
-    })
-  });
-
-  catName.value = catRegex.value = "";
-  await loadCategories();
-  reassignCategories();
-  saveProductsCategory();
-}
-
-async function removeCategory(id){
-  if(!confirm("⚠️ ต้องการลบหมวดหมู่นี้จริงหรือไม่?\nสินค้าที่อยู่ในหมวดนี้จะถูกจัดใหม่เป็น 'อื่นๆ'")){
-    return;
-  }
-
-  await fetch(DB_ROOT + "/categories/" + id + ".json", {
-    method: "DELETE"
-  });
-
-  await loadCategories();
-  reassignCategories();
-  saveProductsCategory();
-}
-
-/* ================= CATEGORY CRUD ================= */
-
-function renderCatManager(){
-  catList.innerHTML="";
-  CATEGORIES.forEach(c=>{
-    catList.innerHTML+=`
-      <div class="cat-item">
-        <div>
-          <b>${c.name}</b><br>
-          <small>${c.regex}</small>
-        </div>
-        <button class="danger" onclick="removeCategory('${c.id}')">
-          ลบ
-        </button>
-      </div>`;
-  });
-}
-
-function reassignCategories(){
-  DATA.forEach(p=>{
-
-    // 🛡️ กันพัง: ถ้าไม่มีชื่อสินค้า
-    if(!p || !p.name){
-      p.category = "อื่นๆ";
-      return;
-    }
-
-    const found = CATEGORIES.find(c=>{
-      try{
-        return new RegExp(c.regex,"i").test(p.name);
-      }catch(e){
-        return false;
-      }
-    });
-
-    p.category = found ? found.name : "อื่นๆ";
-  });
-}
-
-async function saveProductsCategory(){
-  for(const batch of Object.entries(DATA_BY_BATCH)){
-    const [batchId, batchData] = batch;
-    for(const [i,p] of batchData.items.entries()){
-      await fetch(
-        `${DB_ROOT}/imports/${batchId}/items/${i}/category.json`,
-        { method:"PUT", body: JSON.stringify(p.category) }
-      );
-    }
+let presets=JSON.parse(localStorage.getItem(PS)||'null')||defaultPresets;
+let data=JSON.parse(localStorage.getItem(LS)||'null')||{
+ topic:{enabled:true,items:[{name:'หัวข้อเรื่อง',text:''}]},
+ context:{enabled:true,items:[{name:'ข้อมูลเพิ่มเติม',text:''}]},
+ facts:{enabled:true,items:[{name:'ข้อเท็จจริง / เหตุการณ์',text:''}]},
+ type:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'COMEDY',text:'COMEDY'},{name:'DRAMA',text:'DRAMA'},{name:'HORROR',text:'HORROR'},{name:'MYSTERY',text:'MYSTERY'},{name:'TWIST',text:'TWIST'},{name:'LOVE',text:'LOVE'},{name:'LIFE STORY',text:'LIFE STORY'},{name:'EXPERIENCE',text:'EXPERIENCE'},{name:'CONFESSION',text:'CONFESSION'},{name:'INSPIRATION',text:'INSPIRATION'}]},
+ angle:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'กูเจอมากับตัว',text:'PERSONAL EXPERIENCE'},{name:'เมาท์ให้เพื่อนฟัง',text:'FRIENDLY GOSSIP / CONVERSATIONAL'},{name:'ชวนสงสัย',text:'MYSTERY / CURIOSITY'},{name:'ฮาแบบธรรมชาติ',text:'COMEDIC'},{name:'ดราม่า',text:'EMOTIONAL'},{name:'หลอน',text:'SUSPENSE / HORROR'},{name:'หักมุม',text:'TWIST'}]},
+ pov:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'กู / ฉัน — First Person',text:'FIRST PERSON'},{name:'มึง — Second Person',text:'SECOND PERSON'},{name:'ผู้เล่า — Third Person',text:'THIRD PERSON'}]},
+ tone:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'RAW / ภาษาพูด',text:'RAW CONVERSATIONAL'},{name:'กวน',text:'PLAYFUL / SARCASTIC'},{name:'จริงจัง',text:'SERIOUS'},{name:'หลอน',text:'SUSPENSEFUL'},{name:'ดราม่า',text:'EMOTIONAL'},{name:'อบอุ่น',text:'WARM / REFLECTIVE'}]},
+ emotion:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'อยากรู้',text:'CURIOSITY'},{name:'ขำ',text:'AMUSEMENT'},{name:'ลุ้น',text:'SUSPENSE'},{name:'ช็อก',text:'SHOCK'},{name:'สะเทือนใจ',text:'EMOTIONAL IMPACT'},{name:'อบอุ่น',text:'WARMTH'},{name:'คิดตาม',text:'REFLECTION'}]},
+ duration:{enabled:true,items:[{name:'30 วินาที',text:'30 seconds'},{name:'45 วินาที',text:'45 seconds'},{name:'60 วินาที',text:'60 seconds'},{name:'90 วินาที',text:'90 seconds'},{name:'120 วินาที',text:'120 seconds'}]},
+ scenes:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'1 Scene',text:'1'},{name:'2 Scenes',text:'2'},{name:'3 Scenes',text:'3'},{name:'4 Scenes',text:'4'},{name:'5 Scenes',text:'5'},{name:'6 Scenes',text:'6'},{name:'8 Scenes',text:'8'},{name:'10 Scenes',text:'10'}]},
+ structure:{enabled:true,items:[{name:'STORY STRUCTURE กลาง (MASTER)',text:''}]},
+ reference:{enabled:false,items:[{name:'ไม่มี Reference',text:'NO REFERENCE'}]},
+ voice:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'กู / มึง / แม่ง / ว่ะ',text:'RAW THAI FRIEND-TO-FRIEND: กู มึง แม่ง ว่ะ เออ คือ แบบ'}]},
+ vdo:{enabled:false,items:[{name:'9:16 TikTok',text:'Vertical 9:16'},{name:'Real Smartphone UGC',text:'Authentic handheld smartphone realism'}]}
+};
+function save(){localStorage.setItem(LS,JSON.stringify(data));localStorage.setItem(PS,JSON.stringify(presets))}
+function get(key){if(!data[key]?.enabled)return '';let s=document.getElementById(key+'_s');return s?data[key].items[Number(s.value)]?.text||'':''}
+function section(title,key){let c=data[key];if(!c?.enabled)return '';return `<div class="card"><h2>${title}</h2><select id="${key}_s" onchange="buildPrompt()">${c.items.map((x,i)=>`<option value="${i}">${esc(x.name)}</option>`).join('')}</select><div class="row"><button class="add" onclick="openItem('${key}')">➕ เพิ่ม</button><button class="edit" onclick="editItem('${key}')">✏️ แก้ไข</button><button class="del" onclick="delItem('${key}')">🗑 ลบ</button></div></div>`}
+function render(){document.getElementById('menu').innerHTML=section('📝 หัวข้อ / เรื่อง','topic')+section('📌 Context / ฉากหลัง','context')+section('🧾 Facts / เหตุการณ์ที่ต้องรักษา','facts')+section('🎭 Story Type','type')+section('🎯 Story Angle','angle')+section('👁 POV / มุมมอง','pov')+section('🎙 Tone / น้ำเสียง','tone')+section('❤️ Emotional Target','emotion')+section('⏱ ความยาว','duration')+section('🎬 จำนวน Scene','scenes')+section('🧬 STORY STRUCTURE กลาง • MASTER','structure')+section('🎧 Voice DNA','voice')+(mode==='ref'?section('🎧 Reference Style','reference'):'')+(mode==='vdo'?section('📐 VDO Format','vdo'):'');buildPrompt()}
+function renderPresets(){let s=document.getElementById('presetSelect');s.innerHTML=Object.keys(presets).map(k=>`<option value="${k}">${esc(presets[k].name)}</option>`).join('');document.getElementById('presetTags').innerHTML='<span class="tag">Raw</span><span class="tag">Retention</span><span class="tag">Emotion</span><span class="tag">Payoff</span>';}
+function loadPreset(){
+  let p=presets[document.getElementById('presetSelect').value];
+  if(p){
+    data.structure.items[0]={name:'STORY DNA จาก Preset',text:p.text};
+    save();
+    buildPrompt();
   }
 }
+function openPresetModal(){editKey=null;document.getElementById('presetTitle').innerText='➕ เพิ่ม Story Preset';document.getElementById('presetName').value='';document.getElementById('presetText').value='';document.getElementById('presetModal').classList.add('show')}
+function editPresetModal(){let k=document.getElementById('presetSelect').value,p=presets[k];if(!p)return;editKey=k;document.getElementById('presetTitle').innerText='✏️ แก้ไข Story Preset';document.getElementById('presetName').value=p.name;document.getElementById('presetText').value=p.text;document.getElementById('presetModal').classList.add('show')}
+function closePresetModal(){document.getElementById('presetModal').classList.remove('show')}
+function savePresetModal(){let n=document.getElementById('presetName').value.trim(),t=document.getElementById('presetText').value.trim();if(!n||!t)return alert('กรอกชื่อและรายละเอียดก่อน');let k=(editKey||n).toLowerCase().replace(/[^a-z0-9ก-๙]+/gi,'_');presets[k]={name:n,text:t};save();renderPresets();document.getElementById('presetSelect').value=k;loadPreset();closePresetModal()}
+function openItem(k){editKey=k;editIndex=-1;document.getElementById('itemTitle').innerText='➕ เพิ่มข้อมูล';document.getElementById('itemName').value='';document.getElementById('itemText').value='';document.getElementById('itemModal').classList.add('show')}
+function editItem(k){let s=document.getElementById(k+'_s');if(!s)return;editKey=k;editIndex=Number(s.value);let x=data[k].items[editIndex];document.getElementById('itemTitle').innerText='✏️ แก้ไขข้อมูล';document.getElementById('itemName').value=x.name;document.getElementById('itemText').value=x.text;document.getElementById('itemModal').classList.add('show')}
+function closeItemModal(){document.getElementById('itemModal').classList.remove('show')}
+function saveItemModal(){let n=document.getElementById('itemName').value.trim(),t=document.getElementById('itemText').value.trim();if(!n&&!t)return alert('กรอกข้อมูลก่อน');let x={name:n||t,text:t||n};if(editIndex>=0)data[editKey].items[editIndex]=x;else data[editKey].items.push(x);save();render();closeItemModal()}
+function delItem(k){let s=document.getElementById(k+'_s');if(!s)return;let i=Number(s.value);if(data[k].items.length<=1)return alert('ต้องเหลืออย่างน้อย 1 รายการ');if(confirm('ลบรายการนี้?')){data[k].items.splice(i,1);save();render()}}
+function deletePreset(){let s=document.getElementById('presetSelect'),k=s.value;if(Object.keys(presets).length<=1)return alert('ต้องเหลืออย่างน้อย 1 Preset');if(confirm('ลบ Preset นี้?')){delete presets[k];save();renderPresets();loadPreset()}}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function modeTopic(){mode='topic';data.reference.enabled=false;data.vdo.enabled=false;setActive('btnTopic');render()}
+function modeReference(){mode='ref';data.reference.enabled=true;data.vdo.enabled=false;setActive('btnRef');render()}
+function modeVdo(){mode='vdo';data.reference.enabled=false;data.vdo.enabled=true;setActive('btnVdo');render()}
+function setActive(id){['btnTopic','btnRef','btnVdo'].forEach(x=>document.getElementById(x).classList.remove('active-mode'));document.getElementById(id).classList.add('active-mode')}
+function buildPrompt(){
+  let topic=get('topic'),context=get('context'),facts=get('facts'),type=get('type'),
+      angle=get('angle'),pov=get('pov'),tone=get('tone'),emotion=get('emotion'),
+      duration=get('duration'),scenes=get('scenes'),structure=masterStructure,
+      voice=get('voice');
+  let ref=mode==='ref'?get('reference'):'NO REFERENCE';
+  let vdo=mode==='vdo'?get('vdo'):'NO VDO FORMAT LOCK';
 
-/* ================= SCORE ================= */
-const sellScore=p=>Math.round((p.avgViews||0)/1000);
-const feedScore=p=>Math.round((p.engagement||0)*30);
-const FOI=p=>Math.min(100,Math.round(sellScore(p)*0.4+feedScore(p)*0.6));
-const roiScore=p=>Math.round(p.foi*0.7);
+  let prompt=`######
+UNIVERSAL STORY STRUCTURE BUILDER — MASTER STRUCTURE EDITION
+TOPIC → STORY → STORY DNA → FINAL NARRATIVE
+######
 
-/* ================= LOAD ================= */
-async function load(){
-  const r=await fetch(DB_ROOT+IMPORT_PATH);
-  const j=await r.json();
-  if(!j)return;
-  DATA=[];
-  
-  Object.values(j).forEach(b=>{
-    (b.items||[]).forEach(p=>{
+ROLE:
+You are an elite AI Story Architect, Reverse Story Structure Analyzer, Thai Conversational Storytelling Writer, Voice Delivery Analyst, Emotional Arc Architect and Short-Form Narrative Designer.
 
-  // normalize field
-  // Name (ข้อความ) + Product ID (ตัวเลขล้วน)
-  const rawId = (p.product_id || p.productId || p.id || p.pid || p.productID || "");
-  const pid = rawId ? rawId.toString().replace(/[^\d]/g,"") : "";
-  p.product_id = pid;
+==================================================
+ABSOLUTE MASTER STRUCTURE RULE — HARD LOCK
+==================================================
 
-  p.name  = p.name || p.title || p.product_name || "-";
-  p.price = Number(p.price || 0) / 100;
-  p.stock = p.stock || p.inventory || 0;
+🧬 STORY STRUCTURE กลาง IS THE MASTER STRUCTURE.
 
-  p.shop  = p.shop || "-";
-  p.sell  = sellScore(p);
-  p.feed  = feedScore(p);
-  p.foi   = FOI(p);
-  p.roi   = roiScore(p);
+EVERY GENERATOR MUST READ AND APPLY THE MASTER STRUCTURE BEFORE CREATING ANY:
+- Story
+- Narrative
+- Script
+- Scene
+- Voiceover
+- Storyboard
+- VDO Prompt
+- Final Prompt
 
-  DATA.push(p);
-});
-  });
-  reassignCategories(); // ✅ เพิ่มบรรทัดนี้
-  reload();
+The Generator MUST NOT invent a replacement structure.
+
+The Generator MUST NOT:
+- reorder Master Stages
+- skip a required Master Stage without an explicit adaptive reason
+- move Reveal / Twist / Climax / Payoff earlier
+- create a competing Story Structure
+- let camera, visuals, dialogue decoration, B-roll, editing, music or effects override the Master Structure
+
+If any instruction conflicts with the Master Structure:
+MASTER STRUCTURE WINS.
+
+The Generator may adapt CONTENT inside each Stage,
+but may not rewrite the MASTER NARRATIVE ORDER.
+
+==================================================
+MASTER STRUCTURE — READ FIRST
+==================================================
+
+${structure}
+
+==================================================
+MASTER STRUCTURE STATUS
+==================================================
+
+MASTER LOCK:
+ACTIVE
+
+MASTER SOURCE:
+🧬 STORY STRUCTURE กลาง
+
+MASTER BEHAVIOR:
+READ → MAP TOPIC → GENERATE CONTENT → VALIDATE AGAINST MASTER
+
+==================================================
+MODE
+==================================================
+
+${mode==='topic'?'TOPIC STORY GENERATION':mode==='ref'?'REFERENCE STORY DNA EXTRACTION':'VDO STORY PROMPT BUILDING'}
+
+STORY TOPIC:
+${topic||'[USER HAS NOT FILLED TOPIC]'}
+
+STORY CONTEXT:
+${context||'[AUTO — infer only what is necessary]'}
+
+STORY FACTS — MUST PRESERVE:
+${facts||'[NONE PROVIDED]'}
+
+STORY TYPE:
+${type}
+
+STORY ANGLE:
+${angle}
+
+POV:
+${pov}
+
+TONE:
+${tone}
+
+EMOTIONAL TARGET:
+${emotion}
+
+DURATION:
+${duration}
+
+SCENE COUNT:
+${scenes}
+
+VOICE DNA:
+${voice}
+
+REFERENCE:
+${ref}
+
+VDO FORMAT:
+${vdo}
+
+==================================================
+MANDATORY GENERATION PIPELINE
+==================================================
+
+FIRST:
+Read 🧬 STORY STRUCTURE กลาง.
+
+SECOND:
+Map the user's Topic into the existing Master Stages.
+
+THIRD:
+Create STORY PREMISE.
+
+FOURTH:
+Create STORY DNA.
+
+FIFTH:
+Generate the Narrative following the Master Structure.
+
+SIXTH:
+Distribute the Narrative into Scenes without changing Master order.
+
+SEVENTH:
+Validate every Scene against the Master Structure.
+
+NEVER:
+create a new structure just because the Topic is a different genre.
+
+==================================================
+TOPIC ≠ STORY
+==================================================
+
+TOPIC
+→ CORE IDEA
+→ STORY PREMISE
+→ STORY DNA
+→ MASTER STRUCTURE MAPPING
+→ NARRATIVE
+→ SCENE DISTRIBUTION
+→ PAYOFF
+→ VALIDATION
+
+==================================================
+RAW THAI CONVERSATIONAL DELIVERY
+==================================================
+
+If the selected tone/reference indicates casual friend-to-friend storytelling, write like a real Thai person telling a friend a story.
+
+Natural words may include:
+กู / มึง / แม่ง / ว่ะ / เออ / คือ / แบบ / แล้ว / ทีนี้
+
+Use them only when natural.
+Do not force profanity.
+Do not make every sentence slang.
+Preserve emotional authenticity.
+
+Use:
+- short/long sentence variation
+- natural fillers
+- pauses
+- reactions
+- self-corrections
+- emphasis
+- conversational rhythm
+
+Avoid:
+- article-like writing
+- formal narration
+- repetitive hooks
+- generic AI phrasing
+- fake motivational conclusions
+- perfect sentence symmetry
+
+==================================================
+RETENTION ENGINE
+==================================================
+
+Every section must have a reason for the audience to continue.
+
+Use only relevant:
+OPEN LOOP
+UNANSWERED QUESTION
+PARTIAL INFORMATION
+SPECIFIC DETAIL
+ESCALATION
+SURPRISE
+CONTRADICTION
+MYSTERY
+REACTION
+EMOTIONAL CHANGE
+MISDIRECTION
+PAYOFF PROMISE
+
+Do not use all techniques automatically.
+
+==================================================
+INFORMATION RELEASE
+==================================================
+
+Do not reveal all important information at once.
+
+Decide:
+WHAT AUDIENCE KNOWS
+WHAT IS HIDDEN
+WHAT IS DELAYED
+WHEN IT IS REVEALED
+WHY THE REVEAL MATTERS
+
+Do not delay information only for artificial suspense.
+
+==================================================
+EMOTIONAL ARC
+==================================================
+
+Build:
+START EMOTION
+→ CHANGE
+→ TENSION
+→ PEAK
+→ FINAL EMOTION
+
+The emotional peak must come from the story itself.
+
+==================================================
+REFERENCE RULE
+==================================================
+
+If a reference audio/video exists:
+
+REFERENCE = STYLE / STORY DNA SOURCE
+
+Extract:
+- opening pattern
+- rhythm
+- pause
+- vocabulary
+- emotional movement
+- information release
+- escalation
+- ending style
+
+DO NOT COPY:
+- story
+- characters
+- locations
+- unique sentences
+- unique events
+
+==================================================
+FACT / FICTION RULE
+==================================================
+
+If TRUE / REAL EXPERIENCE:
+Do not invent facts, people, dialogue or events.
+
+If Fiction:
+fictional details may be created only when needed for coherent storytelling.
+
+==================================================
+SCENE RULE
+==================================================
+
+Scene Count:
+${scenes}
+
+If AUTO:
+choose the minimum number of scenes needed to preserve the Master Structure.
+
+If fixed:
+distribute Master Stages without changing their order.
+
+Never:
+- reveal Twist before setup
+- move Payoff earlier
+- end before the narrative has earned its ending
+- create a second competing structure
+
+==================================================
+ANTI-SALES RULE
+==================================================
+
+Do NOT insert:
+product pitch
+selling point
+offer
+discount
+price
+promotion
+cart CTA
+purchase CTA
+
+unless the Topic itself explicitly requires them.
+
+Primary goal:
+RETENTION + EMOTION + STORY PAYOFF
+
+==================================================
+MASTER VALIDATION ENGINE
+==================================================
+
+Before final output verify:
+
+[✓] Master Structure was read
+[✓] Master Structure is the only narrative structure used
+[✓] Topic mapped into Master Stages
+[✓] No competing structure was created
+[✓] Narrative order preserved
+[✓] Emotional Arc preserved
+[✓] Information Release preserved
+[✓] Reveal / Twist timing preserved
+[✓] Payoff preserved
+[✓] Scene order preserved
+[✓] Voice does not break narrative
+[✓] Visuals do not break narrative
+[✓] Editing does not break narrative
+[✓] No unnecessary sales language
+
+If validation fails:
+REVISE BEFORE OUTPUT.
+
+==================================================
+OUTPUT REQUIRED
+==================================================
+
+OUTPUT 1 — MASTER STRUCTURE USED
+OUTPUT 2 — TOPIC ANALYSIS
+OUTPUT 3 — STORY PREMISE
+OUTPUT 4 — MASTER STRUCTURE MAPPING
+OUTPUT 5 — STORY DNA
+OUTPUT 6 — EMOTIONAL ARC
+OUTPUT 7 — INFORMATION RELEASE MAP
+OUTPUT 8 — VOICE & DELIVERY DNA
+OUTPUT 9 — NARRATIVE / SCRIPT
+OUTPUT 10 — SCENE DISTRIBUTION
+OUTPUT 11 — MASTER VALIDATION
+
+OUTPUT LANGUAGE:
+Thai
+
+OUTPUT FORMAT:
+Return the complete result inside ONE Markdown Code Block only.
+
+######
+`;
+  result.value=prompt;
+  document.getElementById('status').textContent='🔒 Master Structure ACTIVE • Prompt อัปเดต '+new Date().toLocaleTimeString('th-TH');
 }
 
-/* ================= UI ================= */
-
-function renderPage(){
-  const start = (CURRENT_PAGE - 1) * PAGE_SIZE;
-  const pageData = FILTERED_DATA.slice(start, start + PAGE_SIZE);
-
-  render(pageData);
-  renderPagination();
-}
-function reload(){
-  dashboard();
-  filterCat();
-  FILTERED_DATA=[...DATA];
-  CURRENT_PAGE=1;
-  renderPage();
-  buildGPT();
-}
-function dashboard(){
-  total.innerText=DATA.length;
-  easy.innerText=DATA.filter(p=>p.foi>=75).length;
-  roiHigh.innerText=DATA.filter(p=>p.roi>=70).length;
-  const c={};DATA.forEach(p=>c[p.category]=(c[p.category]||0)+1);
-  topCat.innerText=Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0]||"-";
-}
-function filterCat(){
-  catFilter.innerHTML='<option value="">ทุกหมวด</option>';
-
-  [...new Set(
-    DATA
-      .filter(p=>p && p.category)
-      .map(p=>p.category)
-  )].forEach(c=>{
-    catFilter.innerHTML+=`<option>${c}</option>`;
-  });
-}
-function apply(){
-  const q=search.value.toLowerCase(),c=catFilter.value;
-  FILTERED_DATA=DATA.filter(p=>(!q||p.name.toLowerCase().includes(q))&&(!c||p.category===c));
-  CURRENT_PAGE=1;
-  renderPage();
+function initMasterUI(){
+  const el=document.getElementById('masterStructure');
+  if(el) el.value=masterStructure;
+  syncMasterToData();
 }
 
-/* ================= PRODUCT LINK HELPERS ================= */
-// STEP 2 — helper สร้าง Product Link (ใช้ตอน render)
-function buildProductLink(p){
-  if(!p) return "";
-
-  // กรณีมี product_id ตรง
-  if(p.name){
-    return `https://shop.tiktok.com/view/product/${p.product_id}?region=TH&locale=th-TH&source=agency`;
-  }
-
-  // fallback: ถ้ามี product_url เต็มอยู่แล้ว
-  if(p.product_url && p.product_url.startsWith("http")){
-    return p.product_url;
-  }
-
-  return "";
+function syncMasterToData(){
+  if(!data.structure) data.structure={enabled:true,items:[{name:'STORY STRUCTURE กลาง (MASTER)',text:''}]};
+  data.structure.enabled=true;
+  data.structure.items[0]={name:'STORY STRUCTURE กลาง (MASTER)',text:masterStructure};
+  save();
 }
 
-/* ================= RENDER ================= */
-function render(list){
-  tb.innerHTML = "";
-
-  list
-    .sort((a,b)=>b.foi-a.foi)
-    .forEach((p,i)=>{
-      const key = DATA.indexOf(p);
-      const checked = SELECTED.has(key) ? "checked" : "";
-      const productLink = buildProductLink(p);
-
-      tb.innerHTML += `
-<tr>
-  <!-- เลือก -->
-  <td>
-    <input type="checkbox" ${checked}
-      onchange="toggleSelect(${key})">
-  </td>
-
-  <!-- # -->
-  <td>#${(CURRENT_PAGE-1)*PAGE_SIZE+i+1}</td>
-
-  <!-- รูป -->
-  <td>
-    ${(() => {
-      const img = p.image || 'https://via.placeholder.com/80';
-      const hasReal = !!p.image;
-      const hi = hasReal ? getHiResImage(p.image) : '';
-      return `
-        <img class="thumb" src="${img}">
-        <div style="margin-top:6px">
-          ${hasReal ? `
-            <a href="${hi}" target="_blank" class="product-btn" style="font-size:11px;padding:3px 8px">
-              Open
-            </a>
-          ` : `<span style=\"color:#64748b;font-size:11px\">-</span>`}
-        </div>
-      `;
-    })()}
-  </td>
-
-  <!-- Name -->
-  <td>
-    <b>${p.name}</b>
-  </td>
-
-  <!-- ID -->
-  <td>
-    <code>${p.product_id || "-"}</code>
-  </td>
-
-  <!-- Product Link -->
-  <td>
-    ${productLink ? `
-      <a href="${productLink}" target="_blank" class="product-btn">
-        Link
-      </a>
-    ` : "-"}
-  </td>
-</tr>`;
-    });
+function saveMasterStructure(){
+  const el=document.getElementById('masterStructure');
+  const value=(el?.value||'').trim();
+  if(!value) return alert('กรุณาใส่ STORY STRUCTURE กลาง ก่อนบันทึก');
+  masterStructure=value;
+  localStorage.setItem(MASTER_KEY,masterStructure);
+  syncMasterToData();
+  document.getElementById('masterStatus').textContent='🔒 MASTER LOCKED • บันทึกแล้ว • Generator ทุกตัวต้องอ่าน Master นี้';
+  buildPrompt();
 }
 
-function toggleSelect(key){
-  if(SELECTED.has(key)) SELECTED.delete(key);
-  else SELECTED.add(key);
-  saveSelected();
-  buildGPT();
+function importCurrentStructure(){
+  const current=data.structure?.items?.[0]?.text||'';
+  if(!current.trim()) return alert('ยังไม่มี Structure ปัจจุบันให้ส่งเข้า Master');
+  if(!confirm('นำ STORY STRUCTURE ปัจจุบันเข้าเป็น MASTER STRUCTURE ใช่หรือไม่?')) return;
+  masterStructure=current.trim();
+  localStorage.setItem(MASTER_KEY,masterStructure);
+  document.getElementById('masterStructure').value=masterStructure;
+  syncMasterToData();
+  document.getElementById('masterStatus').textContent='🔒 MASTER LOCKED • รับ Structure ปัจจุบันเป็น Master แล้ว';
+  buildPrompt();
 }
 
-/* ================= PAGINATION UI ================= */
-function renderPagination(){
-  const totalPages=Math.ceil(FILTERED_DATA.length/PAGE_SIZE);
-  if(totalPages<=1){pagination.innerHTML="";return;}
-  let html=`<button class="page-btn" ${CURRENT_PAGE===1?"disabled":""} onclick="gotoPage(${CURRENT_PAGE-1})">‹</button>`;
-  let start=Math.max(1,CURRENT_PAGE-2);
-  let end=Math.min(totalPages,start+4);
-  if(start>1)html+=`<button class="page-btn" onclick="gotoPage(1)">1</button>…`;
-  for(let i=start;i<=end;i++){
-    html+=`<button class="page-btn ${i===CURRENT_PAGE?"active":""}" onclick="gotoPage(${i})">${i}</button>`;
-  }
-  if(end<totalPages)html+=`…<button class="page-btn" onclick="gotoPage(${totalPages})">${totalPages}</button>`;
-  html+=`<button class="page-btn" ${CURRENT_PAGE===totalPages?"disabled":""} onclick="gotoPage(${CURRENT_PAGE+1})">›</button>`;
-  pagination.innerHTML=html;
-}
-function gotoPage(p){CURRENT_PAGE=p;renderPage();}
-function changePageSize(){PAGE_SIZE=parseInt(pageSize.value);CURRENT_PAGE=1;renderPage();}
-
-/* ================= SELECT ACTION ================= */
-function selectPage(){
-  const start = (CURRENT_PAGE - 1) * PAGE_SIZE;
-  const pageItems = FILTERED_DATA.slice(start, start + PAGE_SIZE);
-
-  pageItems.forEach(p=>{
-    const key = DATA.indexOf(p);
-    SELECTED.add(key);
-  });
-
-  saveSelected();
-  renderPage();
-  buildGPT();
+function resetMasterStructure(){
+  if(!confirm('คืนค่า STORY STRUCTURE กลาง เป็นค่าเริ่มต้นหรือไม่?')) return;
+  masterStructure=DEFAULT_MASTER_STRUCTURE;
+  localStorage.setItem(MASTER_KEY,masterStructure);
+  document.getElementById('masterStructure').value=masterStructure;
+  syncMasterToData();
+  document.getElementById('masterStatus').textContent='🔒 MASTER LOCKED • คืนค่าเริ่มต้นแล้ว';
+  buildPrompt();
 }
 
-/* ================= CLEAR SELECTED ================= */
-function clearSelected(){
-  if(!SELECTED.size) return;
-
-  if(!confirm("ล้างสินค้าที่เลือกทั้งหมด?")) return;
-
-  SELECTED.clear();          // ล้าง Set
-  saveSelected();            // sync localStorage
-  renderPage();              // refresh checkbox
-  buildGPT();                // refresh GPT text
-}
-
-function cleanForGPT(text){
-  return (text || "").replace(/ร้านค้าของคุณ/g, "").trim();
-}
-
-/* ================= GPT ================= */
-function cleanForGPT(text){
-  return (text || "").replace(/ร้านค้าของคุณ/g, "").trim();
-}
-
-function buildGPT(){
-  const list = SELECTED.size
-    ? [...SELECTED].map(i => DATA[i]).filter(Boolean)
-    : FILTERED_DATA.slice(0,10);
-
-  gptPrompt.value = list.map((p,i)=>
-    `${i+1}. ${cleanForGPT(p.name) || "-"} | link:${getHiResImage(p.image)} | ${p.product_id || 0}`
-  ).join("\n");
-}
-
-function exportGPTCSV(){
-  const list = SELECTED.size
-    ? [...SELECTED].map(i => DATA[i]).filter(Boolean)
-    : FILTERED_DATA.slice(0,10);
-
-  const headers = ["Title","ImageURL","ProductID"];
-  let csv = "\ufeff" + headers.join(",") + "\n";
-
-  list.forEach((p,i)=>{
-    const title = `${i+1}. ${cleanForGPT(p?.name) || "-"}`.replace(/"/g,'""');
-    const imageUrl = (p?.image ? getHiResImage(p.image) : "").replace(/"/g,'""');
-    const productId = (p?.product_id || "").toString().replace(/"/g,'""');
-
-    csv += `"${title}","${imageUrl}","${productId}"\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "output.csv";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-
-  URL.revokeObjectURL(url);
-}
-
-/* ================= CLEAR ================= */
-async function clearData(){
-  if(!confirm("ลบข้อมูลทั้งหมด?"))return;
-  await fetch(DB_ROOT+IMPORT_PATH,{method:"DELETE"});
-  DATA=[];reload();
-}
-
-/* ================= INIT ================= */
-async function init(){
-  await loadCategories(); // โหลดหมวดก่อน
-  await load();           // แล้วค่อยโหลดสินค้า
-}
-
-init();
+function copyText(){navigator.clipboard.writeText(result.value).then(()=>alert('Copy Story Structure Prompt สำเร็จ'))}
+function clearData(){if(!confirm('รีเซ็ต Story Builder ทั้งหมด รวม Master Structure?'))return;localStorage.removeItem(LS);localStorage.removeItem(PS);localStorage.removeItem(MASTER_KEY);location.reload()}
+renderPresets();modeTopic();initMasterUI();buildPrompt();
 </script>
-
 </body>
 </html>
