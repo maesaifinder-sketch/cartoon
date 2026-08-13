@@ -2963,6 +2963,14 @@ return result;
 
 }
 
+AUTO_LOCK_IDS.forEach(([checkId,textId])=>{
+
+  document.getElementById(checkId)?.addEventListener("change",saveAutoLock);
+
+  document.getElementById(textId)?.addEventListener("input",saveAutoLock);
+
+});
+
 /* =====================================================
    WINDOW LOAD
 ===================================================== */
