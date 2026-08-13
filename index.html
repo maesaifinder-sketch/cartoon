@@ -3,396 +3,1808 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Story Structure Builder PRO+</title>
+
+<title>AI STORY BUILDER PRO+ — V9 PRO</title>
+
+<link rel="icon" href="favicon.ico">
+
 <style>
 :root{
-  --bg:#080d28;--bg2:#0d1436;--panel:#111936;--panel2:#182242;
-  --line:#293766;--line2:#3a4a80;--text:#f4f6ff;--muted:#a9b2d0;
-  --blue:#5d7cff;--purple:#8a5cff;--cyan:#4fd7ff;--green:#19d49b;
-  --orange:#ff9b42;--red:#ff4b55;--shadow:0 18px 50px rgba(0,0,0,.32)
+
+--bg:#050816;
+--bg2:#091128;
+--panel:#0d1633;
+--panel2:#111d40;
+--border:#243a7d;
+
+--cyan:#4fd1c5;
+--blue:#4f8cff;
+--purple:#7c4dff;
+--orange:#ff922b;
+--green:#20c997;
+--red:#ff4d4f;
+
+--text:#eef5ff;
+--muted:#9bb0d3;
 }
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif;background:
-radial-gradient(circle at 10% 0%,rgba(93,124,255,.16),transparent 28%),
-radial-gradient(circle at 95% 5%,rgba(138,92,255,.13),transparent 30%),
-linear-gradient(180deg,#070c25,#080d28 50%,#060a20);color:var(--text)}
-body{padding:12px}
-button,select,input,textarea{font:inherit}
-button{cursor:pointer;color:#fff;border:0;font-weight:750}
-input,select,textarea{width:100%;background:#151e3d;color:var(--text);border:1px solid #34436f;border-radius:10px;padding:10px;outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(93,124,255,.13)}
-textarea{resize:vertical}
-.app-shell{max-width:1500px;margin:auto}
-.header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-.brand{font-weight:900;font-size:18px;letter-spacing:.2px}
-.brand small{display:block;color:var(--muted);font-size:11px;font-weight:500;margin-top:2px}
-.topbar{display:flex;gap:6px;flex-wrap:wrap}
-.topbar button{padding:9px 12px;border-radius:10px;background:#171f40;border:1px solid #303d69}
-.topbar .home{background:#17294a}.topbar .cmd{background:linear-gradient(135deg,#6b4cff,#934fff)}
-.topbar .audio{background:linear-gradient(135deg,#0f8ecb,#4f6fff)}
-.topbar .gem{background:linear-gradient(135deg,#f06a34,#ff9a43)}
-.two-frame{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:12px;align-items:start}
-.frame{background:linear-gradient(180deg,rgba(17,25,54,.98),rgba(11,17,40,.98));border:1px solid #26345e;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-.frame-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 15px;border-bottom:1px solid #253257;background:linear-gradient(180deg,rgba(29,39,77,.55),rgba(16,23,49,.4))}
-.frame-title{font-weight:850}.frame-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.frame-body{padding:12px}
-.card{background:linear-gradient(180deg,#131d3d,#101832);border:1px solid #27365f;border-radius:14px;padding:12px;margin-bottom:10px}
-.card h2{font-size:14px;margin:0 0 8px}
-.card .row{display:flex;gap:6px;margin-top:7px}.card .row>*{flex:1}
-.hint{color:var(--muted);font-size:11px;line-height:1.5}
-.btn{padding:9px 11px;border-radius:10px;color:#fff !important}
-.btn-purple{background:linear-gradient(135deg,#6b4cff,#934fff) !important;color:#fff !important}
-.btn-orange{background:linear-gradient(135deg,#f06a34,#ff9a43) !important;color:#fff !important}
-.secondary{background:#303a5d !important;color:#fff !important}
-.copy{background:#424d70 !important;color:#fff !important}
-.master-actions .btn{min-height:36px;text-shadow:0 1px 1px rgba(0,0,0,.28)}
-.scene-tools .secondary,.scene-tools .all{color:#fff !important}.add{background:#13b97f}.edit{background:#4869d8}.del{background:#c93747}.secondary{background:#303a5d}.copy{background:#424d70}
-.preset-tags .tag,.tag{display:inline-block;padding:3px 7px;border-radius:999px;background:#1d2b52;color:#b9d9ff;font-size:10px;margin:3px 3px 0 0}
-.master-panel{background:linear-gradient(180deg,#17153c,#11142e);border:1px solid #7658d8;border-radius:14px;padding:12px;box-shadow:0 0 22px rgba(111,74,255,.11)}
-.master-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.master-title{font-weight:900}.master-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.lock-badge,.lock-chip{white-space:nowrap;font-size:10px;padding:5px 8px;border-radius:999px;background:#153b35;color:#8ff5d1;border:1px solid #1fc995}
-.master-editor{min-height:180px;margin-top:8px;background:#090d20;color:#d2ffe9;border:1px solid #4e427e;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;line-height:1.4}
-.master-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:7px}.master-actions button{font-size:10px;padding:8px}
-.master-actions .btn-purple{background:linear-gradient(135deg,#6b4cff,#934fff);color:#fff}.master-actions .btn-orange{background:linear-gradient(135deg,#e86b2f,#ff9a43);color:#fff}.master-actions .secondary{background:#303a5d;color:#fff}
-.master-status{font-size:10px;color:#86dcca;margin-top:6px}
-.lock-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lock-box{background:#0d1430;border:1px solid #2b3964;border-radius:12px;padding:9px}.lock-box label{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750}.lock-box input[type=checkbox]{width:auto;accent-color:#20d39d}.lock-box textarea{margin-top:7px;min-height:62px;font-size:11px}
-.scene-fixed{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#111a37;border:1px solid #34446f;border-radius:11px;padding:9px 11px}.scene-fixed strong{color:#8bdcff}
-.scene-tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}.scene-tools button{padding:11px;border-radius:11px}.make{background:linear-gradient(90deg,#ff3b32,#ff6843);font-size:14px}.next{background:linear-gradient(90deg,#536eff,#7b54ff)}.all{background:linear-gradient(90deg,#16b77f,#2b9fff)}
-.continue-box{background:#0c1330;border:1px dashed #4c5d8e;border-radius:12px;padding:10px;margin-top:8px}.continue-box code{color:#9edcff}
-.output-panel{height:calc(100vh - 105px);min-height:680px;display:flex;flex-direction:column}
-.output{flex:1;min-height:0;background:#070b1b;color:#c9ffd9;border:1px solid #26365f;border-radius:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.5;resize:none}
-.output-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.generate{background:linear-gradient(90deg,#1bc89a,#5576ff);font-size:14px;padding:11px}.status{font-size:11px;color:#9cd7d0}
-.badge-row{display:flex;flex-wrap:wrap;gap:5px}.badge{font-size:10px;padding:4px 7px;border-radius:999px;background:#1c2750;color:#b8c9ff;border:1px solid #35456f}
-.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.style-grid label{display:block;font-size:10px;color:var(--muted);margin-bottom:4px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:999;align-items:center;justify-content:center}.modal.show{display:flex}.modal-box{width:min(760px,94vw);background:#101936;border:1px solid #5a70b0;border-radius:16px;padding:16px;box-shadow:0 30px 90px #000}.modal-actions{display:flex;gap:8px;margin-top:8px}.modal-actions>*{flex:1}
-.info{font-size:10px;color:#aeb9da;line-height:1.55;background:#0c1430;border:1px solid #25365f;border-radius:10px;padding:9px}
-@media(max-width:1050px){.two-frame{grid-template-columns:1fr}.output-panel{height:680px}.header{align-items:flex-start;flex-direction:column}}
-@media(max-width:620px){body{padding:7px}.lock-grid,.style-grid,.scene-tools{grid-template-columns:1fr}.master-actions{grid-template-columns:1fr}.frame{border-radius:14px}}
 
-button:disabled{opacity:.55;cursor:not-allowed;color:#dce3ff !important}
-.topbar button,.scene-tools button,.output-actions button,.master-actions button{color:#fff !important}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
+body{
+
+font-family:
+Inter,
+"Noto Sans Thai",
+sans-serif;
+
+background:
+linear-gradient(180deg,#06091b,#081430);
+
+color:var(--text);
+}
+
+.container{
+
+max-width:1600px;
+margin:auto;
+padding:18px;
+}
+
+.topbar{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:18px;
+flex-wrap:wrap;
+}
+
+.logo{
+
+font-size:28px;
+font-weight:800;
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.subtitle{
+
+font-size:13px;
+color:var(--muted);
+margin-top:3px;
+}
+
+.menu{
+
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.btn{
+
+border:none;
+border-radius:12px;
+padding:12px 16px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+color:white;
+box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+
+.btn:hover{
+
+transform:translateY(-2px);
+}
+
+.btn-blue{
+background:linear-gradient(135deg,#2196f3,#3b82f6);
+}
+
+.btn-orange{
+background:linear-gradient(135deg,#ff9800,#ff6d00);
+}
+
+.btn-purple{
+background:linear-gradient(135deg,#7c4dff,#5e35b1);
+}
+
+.btn-green{
+background:linear-gradient(135deg,#1db954,#17a673);
+}
+
+.btn-red{
+background:linear-gradient(135deg,#ef4444,#b91c1c);
+}
+
+.btn-dark{
+background:#24345f;
+}
+
+.layout{
+
+display:grid;
+grid-template-columns:1.15fr .85fr;
+gap:18px;
+}
+
+@media(max-width:980px){
+
+.layout{
+grid-template-columns:1fr;
+}
+}
+
+.panel{
+
+background:linear-gradient(180deg,#0d1633,#091228);
+
+border:1px solid var(--border);
+
+border-radius:18px;
+
+padding:18px;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.28);
+}
+
+.panel h2{
+
+font-size:22px;
+margin-bottom:4px;
+}
+
+.panel-desc{
+
+font-size:13px;
+color:var(--muted);
+margin-bottom:14px;
+}
+
+.grid2{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+@media(max-width:720px){
+
+.grid2{
+grid-template-columns:1fr;
+}
+}
+
+label{
+
+display:block;
+font-size:13px;
+margin-bottom:6px;
+color:#dbeafe;
+font-weight:600;
+}
+
+input,
+select,
+textarea{
+
+width:100%;
+
+padding:12px;
+
+border-radius:12px;
+
+border:1px solid #2b4c91;
+
+background:#08112a;
+
+color:white;
+
+outline:none;
+}
+
+textarea{
+
+resize:vertical;
+min-height:90px;
+}
+
+.section{
+
+margin-top:18px;
+padding-top:16px;
+border-top:1px solid rgba(255,255,255,.08);
+}
+
+.badge{
+
+display:inline-flex;
+align-items:center;
+gap:6px;
+padding:6px 12px;
+border-radius:999px;
+background:#10344b;
+border:1px solid #1f8b8b;
+font-size:12px;
+font-weight:700;
+color:#9ff7ed;
+}
+
+.preset-tags{
+
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+margin-top:10px;
+}
+
+.tag{
+
+padding:5px 10px;
+border-radius:999px;
+background:#17353b;
+border:1px solid #2b7070;
+font-size:11px;
+color:#9ff7ed;
+}
+
+.lock-card{
+
+background:#0b1737;
+border:1px solid #27448f;
+border-radius:14px;
+padding:12px;
+}
+
+.lock-card h4{
+
+font-size:15px;
+margin-bottom:8px;
+}
+
+.output-box{
+
+background:#020617;
+border:1px solid #294a8f;
+border-radius:16px;
+padding:16px;
+min-height:460px;
+white-space:pre-wrap;
+overflow:auto;
+font-family:Consolas,monospace;
+font-size:13px;
+line-height:1.6;
+}
+
+.progress{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+border-radius:12px;
+background:#0b1737;
+border:1px solid #27448f;
+margin-bottom:12px;
+}
+
+.progress strong{
+
+font-size:15px;
+}
+
+.scene-buttons{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:12px;
+}
+
+.footer-note{
+
+font-size:12px;
+color:var(--muted);
+margin-top:12px;
+line-height:1.6;
+}
 </style>
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="header">
-    <div>
-      <div class="brand">🧠 AI STORY BUILDER PRO+ <small>Topic → Master Structure → Multi-Scene → ChatGPT / Gemini</small></div>
-    </div>
-    <nav class="topbar">
-      <button class="audio" onclick="window.open('https://countik.com/th/tiktok-video-to-mp3-converter','_blank','noopener')">🎧 สร้างเสียง</button>
-      <button class="gem" onclick="window.open('https://gemini.google.com/gem/1NQlXP6luO-FQ28PU5ATlhEAc7C7eC12v?usp=sharing','_blank','noopener')">🎬 เปิดGem</button>
-      <button class="cmd" onclick="copyAnalyzerCommand()">📋 คำสั่ง</button>
-      <button class="home" onclick="window.location.href='https://gemini-prompt-pro.web.app/'">⌂ หน้าหลัก</button>
-    </nav>
-  </header>
+<div class="container">
 
-  <main class="two-frame">
+<div class="topbar">
 
-    <!-- LEFT FRAME -->
-    <section class="frame">
-      <div class="frame-head">
-        <div>
-          <div class="frame-title">📝 STORY CONTROL</div>
-          <div class="frame-sub">กำหนดหัวข้อ + DNA + Scene Lock ก่อนสร้าง Prompt</div>
-        </div>
-        <span class="lock-chip">🔒 MASTER READY</span>
-      </div>
+<div>
 
-      <div class="frame-body">
+<div class="logo">🧠 AI STORY BUILDER PRO+</div>
 
-        <div class="card">
-          <h2>🧬 Story Style Preset</h2>
-          <select id="presetSelect" onchange="loadPreset()"></select>
-          <div class="row">
-            <button class="btn add" onclick="openPresetModal()">➕ เพิ่ม</button>
-            <button class="btn edit" onclick="editPresetModal()">✏️ แก้ไข</button>
-            <button class="btn del" onclick="deletePreset()">🗑 ลบ</button>
-          </div>
-          <div id="presetTags" class="preset-tags"></div>
-        </div>
-
-        <div id="menu"></div>
-
-        <div class="master-panel">
-          <div class="master-head">
-            <div>
-              <div class="master-title">🧬 STORY STRUCTURE กลาง</div>
-              <div class="master-sub">MASTER STRUCTURE — Generator ทุกตัวต้องอ่านก่อนสร้าง Prompt</div>
-            </div>
-            <span class="lock-badge">🔒 LOCKED</span>
-          </div>
-          <textarea id="masterStructure" class="master-editor" spellcheck="false"></textarea>
-          <div class="master-actions">
-            <button class="btn btn-purple" onclick="saveMasterStructure()">💾 บันทึก Master</button>
-            <button class="btn btn-orange" onclick="importCurrentStructure()">⬇️ ใช้ Structure ปัจจุบัน</button>
-            <button class="btn secondary" onclick="resetMasterStructure()">↺ คืนค่า</button>
-          </div>
-          <div id="masterStatus" class="master-status">Master Structure พร้อมใช้งาน</div>
-        </div>
-
-        <div class="card">
-          <h2>🔐 CONTINUITY LOCK — ล็อกความต่อเนื่องทุก Scene</h2>
-          <div class="lock-grid">
-            <div class="lock-box">
-              <label><input id="lockCharacter" type="checkbox" checked> 👤 ตัวละคร</label>
-              <textarea id="characterLock" placeholder="รูปลักษณ์ อายุ เสื้อผ้า บุคลิก ลักษณะเด่น"></textarea>
-            </div>
-            <div class="lock-box">
-              <label><input id="lockLocation" type="checkbox" checked> 📍 สถานที่</label>
-              <textarea id="locationLock" placeholder="สถานที่ ตำแหน่ง เวลาในเรื่อง"></textarea>
-            </div>
-            <div class="lock-box">
-              <label><input id="lockAtmosphere" type="checkbox" checked> 🌫️ บรรยากาศ</label>
-              <textarea id="atmosphereLock" placeholder="อารมณ์ แสง สี อากาศ ความรู้สึก"></textarea>
-            </div>
-            <div class="lock-box">
-              <label><input id="lockEnvironment" type="checkbox" checked> 🏠 สภาพแวดล้อม</label>
-              <textarea id="environmentLock" placeholder="วัตถุ ฉากหลัง สภาพพื้นที่ สิ่งที่ต้องคงเดิม"></textarea>
-            </div>
-          </div>
-          <div class="info" style="margin-top:8px">เมื่อ Lock แล้วทุก Scene ต้องอ้างอิงค่าเดียวกัน เว้นแต่ Story ระบุ “การเปลี่ยนแปลง” อย่างชัดเจน</div>
-        </div>
-
-        <div class="card">
-          <h2>🎙️ VOICE & DELIVERY LOCK</h2>
-          <div class="style-grid">
-            <div><label>จังหวะการพูด</label><select id="deliveryPace"><option>ธรรมชาติ / Conversational</option><option>เร็วและตื่นเต้น</option><option>ช้าและกดอารมณ์</option><option>เร่ง → ผ่อนตามเหตุการณ์</option></select></div>
-            <div><label>น้ำเสียง</label><select id="voiceTone"><option>เป็นกันเอง เหมือนเพื่อนเล่าให้ฟัง</option><option>จริงจัง</option><option>กวน / เมาท์</option><option>ลึกลับ / หลอน</option><option>สะเทือนอารมณ์</option><option>อบอุ่น</option></select></div>
-            <div><label>โทนเสียง</label><select id="voiceColor"><option>Raw Thai Conversational</option><option>Natural Human</option><option>Low / Intimate</option><option>Energetic</option><option>Emotional</option></select></div>
-            <div><label>ความเร็ว</label><select id="speechSpeed"><option>1.00x — ธรรมชาติ</option><option>0.90x — ช้าลง</option><option>1.10x — เร็วขึ้น</option><option>1.20x — เร็ว / ตื่นเต้น</option></select></div>
-          </div>
-          <div class="info" style="margin-top:8px">ระบบจะคุมจำนวนคำของบทพูดให้เหมาะกับ 10 วินาที และห้ามยัดบทพูดเกินเวลาที่กำหนด</div>
-        </div>
-
-        <div class="card">
-          <h2>🧪 VISUAL STYLE</h2>
-          <select id="visualStyle">
-            <option>Realistic Storytelling</option>
-            <option>3D Cinematic</option>
-            <option>3D อวัยวะ</option>
-            <option>3D การแพทย์</option>
-            <option>3D จุลชีพ</option>
-            <option>3D Medical Visualization</option>
-            <option>3D Microscopic / Microbiology</option>
-            <option>Hybrid: คนจริง + 3D อวัยวะ / จุลชีพ</option>
-          </select>
-          <div class="badge-row">
-            <span class="badge">3D</span><span class="badge">3D อวัยวะ</span><span class="badge">3D การแพทย์</span><span class="badge">3D จุลชีพ</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>🎬 SCENE SETTINGS</h2>
-          <div class="scene-fixed"><span>ความยาวต่อ Scene</span><strong>10 วินาที / Scene — FIXED</strong></div>
-          <div style="height:8px"></div>
-          <label class="hint">จำนวน Scene</label>
-          <select id="sceneCount">
-            <option value="1">1 Scene</option><option value="2">2 Scenes</option><option value="3">3 Scenes</option>
-            <option value="4">4 Scenes</option><option value="5">5 Scenes</option><option value="6">6 Scenes</option>
-            <option value="8">8 Scenes</option><option value="10">10 Scenes</option>
-          </select>
-          <div class="scene-tools" style="margin-top:8px">
-            <button class="make" onclick="generateAllScenes()">✨ สร้าง Prompt Multi-Scene</button>
-            <button class="next" onclick="generateNextScene()">➡️ ต่อ / ฉากต่อไป</button>
-          </div>
-          <div class="scene-tools" style="margin-top:6px">
-            <button class="secondary" onclick="previousScene()">↩️ ย้อนกลับ Scene</button>
-            <button class="all" onclick="resetSceneProgress()">⏮️ เริ่มที่ Scene 1</button>
-          </div>
-          <div class="continue-box">
-            <b>ระบบต่อ Scene:</b> ปุ่ม “ต่อ / ฉากต่อไป” ครั้งแรก = Prompt Scene 1
-            จากนั้นกดซ้ำ = Scene 2 → Scene 3 → ... จนครบ
-            โดยทุก Scene ต้องรักษา Master Structure + Continuity Lock + Voice DNA + 10 วินาที
-            <br><br>
-            <b>ใช้กับ ChatGPT:</b> หลัง ChatGPT สร้าง Scene ปัจจุบันแล้ว ให้พิมพ์เพียง
-            <code>ต่อ</code> หรือ <code>ฉากต่อไป</code> เพื่อให้ ChatGPT สร้าง Scene ถัดไปเพียง 1 Scene
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- RIGHT FRAME -->
-    <aside class="frame output-panel">
-      <div class="frame-head">
-        <div>
-          <div class="frame-title">🎬 PROMPT OUTPUT</div>
-          <div class="frame-sub">Prompt พร้อม Copy ไปใช้กับ ChatGPT / Gemini</div>
-        </div>
-        <span id="sceneBadge" class="lock-chip">0 / 0 Scenes</span>
-      </div>
-      <div class="frame-body" style="display:flex;flex-direction:column;flex:1;min-height:0">
-        <div id="status" class="status">พร้อมสร้าง Prompt</div>
-        <textarea id="result" class="output" readonly></textarea>
-        <div class="output-actions">
-          <button class="copy" onclick="copyText()">📋 Copy Prompt</button>
-          <button class="generate" onclick="buildPrompt()">⚡ สร้าง Prompt</button>
-        </div>
-        <button class="btn secondary" style="margin-top:6px" onclick="clearData()">↻ รีเซ็ตข้อมูล</button>
-      </div>
-    </aside>
-
-  </main>
+<div class="subtitle">
+Topic → Master Structure → Multi-Scene → ChatGPT / Gemini
 </div>
 
-<div class="modal" id="presetModal">
-  <div class="modal-box">
-    <h2 id="presetTitle">Preset</h2>
-    <input id="presetName" placeholder="ชื่อ Preset">
-    <textarea id="presetText" rows="12" placeholder="Story Style DNA"></textarea>
-    <div class="modal-actions"><button class="btn add" onclick="savePresetModal()">💾 บันทึก</button><button class="btn del" onclick="closePresetModal()">❌ ปิด</button></div>
-  </div>
 </div>
 
-<div class="modal" id="itemModal">
-  <div class="modal-box">
-    <h2 id="itemTitle">เพิ่มข้อมูล</h2>
-    <input id="itemName" placeholder="ชื่อที่แสดง">
-    <textarea id="itemText" rows="10" placeholder="รายละเอียด"></textarea>
-    <div class="modal-actions"><button class="btn add" onclick="saveItemModal()">💾 บันทึก</button><button class="btn del" onclick="closeItemModal()">❌ ปิด</button></div>
+<div class="menu">
+
+<button class="btn btn-blue" id="btnVoice">
+🎧 สร้างเสียง
+</button>
+
+<button class="btn btn-orange" id="btnGem">
+🎬 เปิดGem
+</button>
+
+<button class="btn btn-purple" id="copyCommand">
+📋 คำสั่ง
+</button>
+
+<button class="btn btn-dark">
+⌂ หน้าหลัก
+</button>
+
+</div>
+
+</div>
+
+<div class="layout">
+
+<!-- LEFT -->
+
+<div class="panel">
+
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+
+<div>
+
+<h2>📝 STORY CONTROL</h2>
+
+<div class="panel-desc">
+กำหนดหัวข้อ + DNA + Scene Lock ก่อนสร้าง Prompt
+</div>
+
+</div>
+
+<div class="badge">
+🔒 MASTER READY
+</div>
+
+</div>
+
+<!-- ส่วนถัดไปจะต่อใน PART 2 -->
+<!-- =========================
+     🧬 STORY STYLE PRESET
+========================= -->
+
+<div class="section">
+
+  <h3 style="margin-bottom:10px;">🧬 Story Style Preset</h3>
+
+  <select id="presetSelect"></select>
+
+  <div id="presetTags" class="preset-tags"></div>
+
+  <div class="grid2" style="margin-top:12px;">
+
+    <button class="btn btn-green" id="addPresetBtn">
+      ➕ เพิ่ม
+    </button>
+
+    <button class="btn btn-blue" id="editPresetBtn">
+      ✏️ แก้ไข
+    </button>
+
   </div>
+
+  <button
+    class="btn btn-red"
+    id="deletePresetBtn"
+    style="margin-top:10px;width:100%;">
+
+    🗑 ลบ Preset
+
+  </button>
+
+</div>
+
+<!-- =========================
+     📝 STORY INPUT
+========================= -->
+
+<div class="section">
+
+<div class="grid2">
+
+<div>
+
+<label>📝 หัวข้อ / เรื่อง</label>
+
+<input
+id="topic"
+placeholder="เช่น คนที่กินนอนดึกติดต่อกัน แล้วร่างกายเริ่มส่งสัญญาณแปลก ๆ">
+
+</div>
+
+<div>
+
+<label>🎭 Story Type</label>
+
+<select id="storyType">
+
+<option value="AUTO">AUTO</option>
+<option>Raw Story</option>
+<option>Horror</option>
+<option>Mystery</option>
+<option>Drama</option>
+<option>Comedy</option>
+<option>Crime</option>
+<option>Medical Story</option>
+<option>3D Medical</option>
+<option>3D Organ</option>
+<option>3D Microbe</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="grid2" style="margin-top:12px;">
+
+<div>
+
+<label>🎯 Story Angle</label>
+
+<select id="storyAngle">
+
+<option value="AUTO">AUTO</option>
+
+<option>กูเจอมากับตัว</option>
+<option>เมาท์ให้เพื่อนฟัง</option>
+<option>เล่าความลับ</option>
+<option>ชวนสงสัย</option>
+<option>หักมุม</option>
+<option>เตือนภัย</option>
+<option>วิทยาศาสตร์อธิบาย</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>👁 POV / มุมมอง</label>
+
+<select id="storyPOV">
+
+<option value="AUTO">AUTO</option>
+
+<option>First Person</option>
+<option>Second Person</option>
+<option>Third Person</option>
+<option>Observer</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="grid2" style="margin-top:12px;">
+
+<div>
+
+<label>🎙 Tone / น้ำเสียง</label>
+
+<select id="storyTone">
+
+<option value="AUTO">AUTO</option>
+
+<option>Raw Conversational</option>
+<option>เพื่อนเล่าให้เพื่อนฟัง</option>
+<option>จริงจัง</option>
+<option>ลุ้น</option>
+<option>หลอน</option>
+<option>อบอุ่น</option>
+<option>กวน</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>❤️ Emotional Target</label>
+
+<select id="emotionalTarget">
+
+<option value="AUTO">AUTO</option>
+
+<option>Curiosity</option>
+<option>Suspense</option>
+<option>Shock</option>
+<option>Empathy</option>
+<option>Relief</option>
+<option>Hope</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div style="margin-top:12px;">
+
+<label>🎧 Voice DNA</label>
+
+<select id="voiceDNA">
+
+<option value="AUTO">AUTO</option>
+
+<option>Raw Thai Conversational</option>
+<option>กู / มึง / แม่ง / ว่ะ</option>
+<option>เป็นกันเอง</option>
+<option>เล่าเหมือนนั่งคุย</option>
+<option>ค่อย ๆ เร่งจังหวะ</option>
+
+</select>
+
+</div>
+
+</div>
+
+<!-- =========================
+     จบ PART 2
+========================= -->
+
+<script>
+/* =====================================================
+   V9 PRO — STORY STYLE PRESET ENGINE
+   แก้ renderPresets + localStorage + classList Error
+===================================================== */
+
+const PS="STORY_PRESETS_V9";
+const ACTIVE="STORY_ACTIVE_PRESET_V9";
+
+const defaultPresets={
+
+raw:{
+name:"🔥 RAW เพื่อนเล่าให้เพื่อนฟัง",
+text:"RAW CONVERSATIONAL FIRST PERSON กู มึง แม่ง ว่ะ"
+},
+
+comedy:{
+name:"😂 Comedy",
+text:"COMEDY PLAYFUL FAST PACING"
+},
+
+horror:{
+name:"👻 Horror",
+text:"HORROR MYSTERY SUSPENSE OPEN LOOP"
+},
+
+drama:{
+name:"💔 Drama",
+text:"DRAMA EMOTIONAL PAYOFF"
+},
+
+twist:{
+name:"🌀 Twist",
+text:"TWIST REVELATION CLIMAX"
+},
+
+experience:{
+name:"🗣 ประสบการณ์จริง",
+text:"FIRST PERSON RAW EXPERIENCE"
+}
+
+};
+
+let presets={};
+
+/* ---------- Utility ---------- */
+
+function esc(str){
+
+return String(str)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;");
+
+}
+
+/* ---------- โหลด Preset ---------- */
+
+function loadPresets(){
+
+try{
+
+const cache=JSON.parse(localStorage.getItem(PS));
+
+if(cache&&Object.keys(cache).length){
+
+presets=cache;
+
+}else{
+
+presets=
+(typeof structuredClone==="function")
+?structuredClone(defaultPresets)
+:{...defaultPresets};
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+}
+
+}catch(e){
+
+presets=
+(typeof structuredClone==="function")
+?structuredClone(defaultPresets)
+:{...defaultPresets};
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+}
+
+}
+
+/* ---------- Render ---------- */
+
+function renderPresets(){
+
+const select=document.getElementById("presetSelect");
+const tags=document.getElementById("presetTags");
+
+if(!select)return;
+
+/* PATCH สำคัญ */
+
+if(!presets||Object.keys(presets).length===0){
+
+presets=
+(typeof structuredClone==="function")
+?structuredClone(defaultPresets)
+:{...defaultPresets};
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+}
+
+let keys=Object.keys(presets).filter(k=>
+
+presets[k]&&
+presets[k].name&&
+presets[k].text
+
+);
+
+/* กันข้อมูลเสีย */
+
+if(!keys.length){
+
+presets=
+(typeof structuredClone==="function")
+?structuredClone(defaultPresets)
+:{...defaultPresets};
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+keys=Object.keys(presets);
+
+}
+
+select.innerHTML=keys.map(k=>
+
+`<option value="${esc(k)}">${esc(presets[k].name)}</option>`
+
+).join("");
+
+const current=localStorage.getItem(ACTIVE)||keys[0];
+
+select.value=keys.includes(current)
+?current
+:keys[0];
+
+const p=presets[select.value];
+
+if(tags&&p){
+
+const dna=p.text.match(
+
+/(?:RAW|COMEDY|DRAMA|HORROR|MYSTERY|TWIST|FIRST PERSON|CONVERSATIONAL|EMOTIONAL|SUSPENSE|OPEN LOOP|PAYOFF|3D)/gi
+
+)||[];
+
+tags.innerHTML=dna
+.slice(0,8)
+.map(x=>`<span class="tag">${esc(x)}</span>`)
+.join("");
+
+}
+
+}
+
+/* ---------- ใช้ Preset ---------- */
+
+function applyPreset(key){
+
+if(!presets[key])return;
+
+const p=presets[key];
+
+localStorage.setItem(ACTIVE,key);
+
+const t=p.text.toUpperCase();
+
+const set=(id,val)=>{
+
+const el=document.getElementById(id);
+if(el)el.value=val;
+
+};
+
+if(t.includes("COMEDY"))set("storyType","Comedy");
+else
+if(t.includes("HORROR"))set("storyType","Horror");
+else
+if(t.includes("DRAMA"))set("storyType","Drama");
+else
+if(t.includes("TWIST"))set("storyType","Mystery");
+else
+if(t.includes("3D"))set("storyType","3D Medical");
+
+if(t.includes("FIRST PERSON"))
+set("storyPOV","First Person");
+
+if(t.includes("RAW"))
+set("storyTone","Raw Conversational");
+
+if(t.includes("EMOTIONAL"))
+set("emotionalTarget","Empathy");
+
+if(t.includes("SUSPENSE"))
+set("emotionalTarget","Suspense");
+
+if(t.includes("PAYOFF"))
+set("storyAngle","หักมุม");
+
+renderPresets();
+
+}
+
+/* ---------- เพิ่ม ---------- */
+
+document.getElementById("addPresetBtn")?.addEventListener("click",()=>{
+
+const name=prompt("ชื่อ Preset");
+
+if(!name)return;
+
+const text=prompt("Preset DNA");
+
+if(!text)return;
+
+const key="user_"+Date.now();
+
+presets[key]={name,text};
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+renderPresets();
+
+});
+
+/* ---------- แก้ ---------- */
+
+document.getElementById("editPresetBtn")?.addEventListener("click",()=>{
+
+const key=document.getElementById("presetSelect")?.value;
+
+if(!key||!presets[key])return;
+
+const name=prompt("แก้ชื่อ",presets[key].name);
+
+if(!name)return;
+
+const text=prompt("แก้ DNA",presets[key].text);
+
+if(!text)return;
+
+presets[key]={name,text};
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+renderPresets();
+
+});
+
+/* ---------- ลบ ---------- */
+
+document.getElementById("deletePresetBtn")?.addEventListener("click",()=>{
+
+const key=document.getElementById("presetSelect")?.value;
+
+if(!key)return;
+
+if(Object.keys(defaultPresets).includes(key)){
+
+alert("Preset พื้นฐานลบไม่ได้");
+
+return;
+
+}
+
+if(!confirm("ลบ Preset นี้?"))return;
+
+delete presets[key];
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+renderPresets();
+
+});
+
+/* ---------- เปลี่ยน Preset ---------- */
+
+document.getElementById("presetSelect")?.addEventListener("change",e=>{
+
+applyPreset(e.target.value);
+
+});
+
+/* ---------- Safe classList ---------- */
+
+function setActive(id){
+
+["btnTopic","btnVoice","btnGem"].forEach(x=>{
+
+const el=document.getElementById(x);
+
+if(el)el.classList.remove("active-mode");
+
+});
+
+const current=document.getElementById(id);
+
+if(current)current.classList.add("active-mode");
+
+}
+
+/* ---------- Boot ---------- */
+
+loadPresets();
+
+renderPresets();
+
+</script>
+
+<!-- =========================================
+     PART 4 — LOCK + MULTI SCENE
+========================================= -->
+
+<div class="section">
+
+<h3>🔐 CONTINUITY LOCK — ล็อกความต่อเนื่องทุก Scene</h3>
+
+<div class="grid2">
+
+<div class="lock-card">
+
+<h4>👤 ตัวละคร</h4>
+
+<textarea
+id="lockCharacter"
+placeholder="รูปลักษณ์ อายุ เสื้อผ้า บุคลิก ลักษณะเด่น"></textarea>
+
+</div>
+
+<div class="lock-card">
+
+<h4>📍 สถานที่</h4>
+
+<textarea
+id="lockLocation"
+placeholder="สถานที่ ตำแหน่ง เวลาในเรื่อง"></textarea>
+
+</div>
+
+<div class="lock-card">
+
+<h4>🌫 บรรยากาศ</h4>
+
+<textarea
+id="lockAtmosphere"
+placeholder="อารมณ์ แสง สี ความรู้สึก"></textarea>
+
+</div>
+
+<div class="lock-card">
+
+<h4>🏠 สภาพแวดล้อม</h4>
+
+<textarea
+id="lockEnvironment"
+placeholder="วัตถุ ฉากหลัง สภาพพื้นที่ สิ่งที่ต้องคงเดิม"></textarea>
+
+</div>
+
+</div>
+
+<div class="footer-note">
+
+เมื่อ Lock แล้วทุก Scene ต้องอ้างอิงค่าเดิม
+เว้นแต่ Story ระบุ "การเปลี่ยนแปลง" อย่างชัดเจน
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+
+<div class="section">
+
+<h3>🎙 VOICE & DELIVERY LOCK</h3>
+
+<div class="grid2">
+
+<div>
+
+<label>จังหวะการพูด</label>
+
+<select id="speechRhythm">
+
+<option>ธรรมชาติ / Conversational</option>
+<option>ค่อย ๆ เร่ง</option>
+<option>เร็ว</option>
+<option>ช้า</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>น้ำเสียง</label>
+
+<select id="speechStyle">
+
+<option>เป็นกันเอง เหมือนเพื่อนเล่าให้ฟัง</option>
+<option>จริงจัง</option>
+<option>หลอน</option>
+<option>อบอุ่น</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="grid2" style="margin-top:12px;">
+
+<div>
+
+<label>โทนเสียง</label>
+
+<select id="voiceTone">
+
+<option>Raw Thai Conversational</option>
+<option>Natural</option>
+<option>Emotional</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>ความเร็ว</label>
+
+<select id="voiceSpeed">
+
+<option>1.00x — ธรรมชาติ</option>
+<option>0.90x</option>
+<option>1.10x</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="footer-note">
+
+ระบบจะคุมจำนวนคำของบทพูดให้เหมาะกับ
+10 วินาที และเล่าให้จบในเวลาที่กำหนด
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+
+<div class="section">
+
+<h3>🎨 VISUAL STYLE</h3>
+
+<select id="visualStyle">
+
+<option>3D</option>
+<option>3D อวัยวะ</option>
+<option>3D การแพทย์</option>
+<option>3D จุลชีพ</option>
+
+</select>
+
+<div class="preset-tags">
+
+<span class="tag">3D</span>
+<span class="tag">3D อวัยวะ</span>
+<span class="tag">3D การแพทย์</span>
+<span class="tag">3D จุลชีพ</span>
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+
+<div class="section">
+
+<h3>🎬 SCENE SETTINGS</h3>
+
+<div class="progress">
+
+<strong id="sceneProgress">
+Scene 1/5 • 10s/Scene
+</strong>
+
+<span class="badge">
+FIXED 10s
+</span>
+
+</div>
+
+<label>จำนวน Scene</label>
+
+<select id="sceneCount">
+
+<option value="1">1 Scene</option>
+<option value="2">2 Scenes</option>
+<option value="3">3 Scenes</option>
+<option value="4">4 Scenes</option>
+<option value="5" selected>5 Scenes</option>
+
+</select>
+
+<div class="scene-buttons">
+
+<button class="btn btn-orange" id="nextSceneBtn">
+➡️ ต่อ / ฉากต่อไป
+</button>
+
+<button class="btn btn-dark" id="prevSceneBtn">
+↩️ ย้อนกลับ Scene
+</button>
+
+</div>
+
+<div class="footer-note">
+
+สำหรับ ChatGPT ให้สร้างเพียง Scene ปัจจุบัน
+เมื่อพิมพ์ "ต่อ" หรือ "ฉากต่อไป"
+ให้สร้าง Scene ถัดไปเพียง 1 Scene
+
+</div>
+
+</div>
+
+<!-- ========================================= -->
+
+<script>
+
+/* ========= MULTI SCENE ENGINE ========= */
+
+const SCENE_KEY="STORY_SCENE_PROGRESS_V9";
+
+function getSceneCount(){
+
+const el=document.getElementById("sceneCount");
+return el?parseInt(el.value):5;
+
+}
+
+function getCurrentScene(){
+
+const n=parseInt(localStorage.getItem(SCENE_KEY)||"1");
+
+return Math.max(1,n);
+
+}
+
+function saveScene(n){
+
+localStorage.setItem(SCENE_KEY,n);
+
+updateSceneBadge();
+
+}
+
+function updateSceneBadge(){
+
+const total=getSceneCount();
+const current=getCurrentScene();
+
+const el=document.getElementById("sceneProgress");
+
+if(el){
+
+el.textContent=`Scene ${current}/${total} • 10s/Scene`;
+
+}
+
+}
+
+/* ---------- ต่อ ---------- */
+
+document.getElementById("nextSceneBtn")
+?.addEventListener("click",()=>{
+
+const total=getSceneCount();
+let current=getCurrentScene();
+
+if(current<total){
+
+current++;
+
+saveScene(current);
+
+}else{
+
+alert(`สร้างครบแล้ว Scene ${total}/${total}`);
+
+}
+
+});
+
+/* ---------- ย้อน ---------- */
+
+document.getElementById("prevSceneBtn")
+?.addEventListener("click",()=>{
+
+let current=getCurrentScene();
+
+if(current>1){
+
+current--;
+
+saveScene(current);
+
+}
+
+});
+
+/* ---------- เปลี่ยนจำนวน Scene ---------- */
+
+document.getElementById("sceneCount")
+?.addEventListener("change",()=>{
+
+const total=getSceneCount();
+let current=getCurrentScene();
+
+if(current>total){
+
+current=total;
+saveScene(current);
+
+}else{
+
+updateSceneBadge();
+
+}
+
+});
+
+/* ---------- CONTINUITY AUTO SAVE ---------- */
+
+const lockIds=[
+
+"lockCharacter",
+"lockLocation",
+"lockAtmosphere",
+"lockEnvironment"
+
+];
+
+lockIds.forEach(id=>{
+
+const el=document.getElementById(id);
+
+if(!el)return;
+
+const key=`LOCK_${id}_V9`;
+
+el.value=localStorage.getItem(key)||"";
+
+el.addEventListener("input",()=>{
+
+localStorage.setItem(key,el.value);
+
+});
+
+});
+
+/* ---------- VOICE AUTO SAVE ---------- */
+
+[
+
+"speechRhythm",
+"speechStyle",
+"voiceTone",
+"voiceSpeed",
+"visualStyle"
+
+].forEach(id=>{
+
+const el=document.getElementById(id);
+
+if(!el)return;
+
+const key=`LOCK_${id}_V9`;
+
+const saved=localStorage.getItem(key);
+
+if(saved)el.value=saved;
+
+el.addEventListener("change",()=>{
+
+localStorage.setItem(key,el.value);
+
+});
+
+});
+
+/* ---------- INIT ---------- */
+
+updateSceneBadge();
+
+</script>
+
+<!-- ===== จบ PART 4 ===== -->
+
+<!-- =========================================
+     PART 5 — MASTER STRUCTURE
+========================================= -->
+
+<div class="section">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:10px;
+">
+
+<div>
+
+<h3>🧬 STORY STRUCTURE กลาง</h3>
+
+<div class="panel-desc">
+MASTER STRUCTURE — Generator ทุกตัวต้องอ่านก่อนสร้าง Prompt
+</div>
+
+</div>
+
+<div class="badge">
+🔒 LOCKED
+</div>
+
+</div>
+
+<textarea
+id="masterStructure"
+style="min-height:220px;margin-top:10px;">UNIVERSAL STORY STRUCTURE กลาง
+
+01 ATTENTION
+02 CONTEXT
+03 TRIGGER
+04 REACTION
+05 ESCALATION
+06 OPEN LOOP
+07 REVELATION
+08 CLIMAX
+09 PAYOFF
+10 ENDING</textarea>
+
+<div class="grid2" style="margin-top:12px;">
+
+<button class="btn btn-purple" id="saveMasterBtn">
+💾 บันทึก Master
+</button>
+
+<button class="btn btn-orange" id="importMasterBtn">
+⬇️ ใช้ Structure ปัจจุบัน
+</button>
+
+</div>
+
+<button
+class="btn btn-dark"
+id="resetMasterBtn"
+style="margin-top:10px;width:100%;">
+
+↺ คืนค่า Master
+
+</button>
+
+<div
+id="masterStatus"
+class="footer-note">
+
+Master Structure พร้อมใช้งาน
+
+</div>
+
+</div>
+
+<!-- =========================================
+     PROMPT OUTPUT
+========================================= -->
+
+</div>
+
+<!-- RIGHT PANEL -->
+
+<div class="panel">
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:14px;
+">
+
+<div>
+
+<h2>🎬 PROMPT OUTPUT</h2>
+
+<div class="panel-desc">
+Prompt พร้อม Copy ไปใช้กับ ChatGPT / Gemini
+</div>
+
+</div>
+
+<div class="badge" id="sceneBadge">
+
+Scene 1/5
+
+</div>
+
+</div>
+
+<div class="progress">
+
+<strong id="promptSceneText">
+
+Scene 1 พร้อมสร้าง
+
+</strong>
+
+<span class="badge">
+
+10s FIXED
+
+</span>
+
+</div>
+
+<div
+id="promptOutput"
+class="output-box"></div>
+
+<div class="scene-buttons">
+
+<button
+class="btn btn-dark"
+id="copyPromptBtn">
+
+📋 Copy Prompt
+
+</button>
+
+<button
+class="btn btn-blue"
+id="buildPromptBtn">
+
+⚡ สร้าง Prompt
+
+</button>
+
+</div>
+
+<div class="scene-buttons">
+
+<button
+class="btn btn-orange"
+id="generateSceneBtn">
+
+✨ สร้าง Scene ปัจจุบัน
+
+</button>
+
+<button
+class="btn btn-green"
+id="queueBtn">
+
+🎬 Queue ทุก Scene
+
+</button>
+
+</div>
+
+<div class="footer-note">
+
+Scene จะสร้างทีละฉากเท่านั้น
+เมื่อผู้ใช้พิมพ์
+
+<strong>ต่อ</strong>
+
+หรือ
+
+<strong>ฉากต่อไป</strong>
+
+ให้ ChatGPT สร้าง Scene ถัดไปเพียงหนึ่งฉาก
+
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 <script>
-const LS='STORY_STRUCTURE_BUILDER_DATA_V5_STORY';
-const PS='STORY_STRUCTURE_PRESETS_V5_STORY';
-let mode='topic', editKey=null, editIndex=-1;
-const defaultPresets={
- raw:{name:'🔥 Raw เพื่อนเล่าให้เพื่อนฟัง',text:'RAW CONVERSATIONAL STORYTELLING. เล่าเหมือนกูนั่งเมาท์ให้มึงฟัง. ใช้ภาษาพูดจริง กู มึง แม่ง ว่ะ เออ คือ แบบ ตามธรรมชาติ. มีคำซ้ำและ pause เล็กน้อยได้. ห้ามยัดคำหยาบทุกประโยค. เน้นชีวิตจริง ความคิดในหัว ปฏิกิริยา และรายละเอียดเล็ก ๆ ที่ทำให้เรื่องดูจริง. ใช้ Open Loop และ Information Delay แบบไม่ฝืน. จังหวะสั้น-ยาวสลับกัน. เร่งเมื่อเรื่องพีค ผ่อนเมื่อสร้างอารมณ์. Ending ต้องเป็นธรรมชาติ ไม่สรุปเหมือนบทความ.'},
- comedy:{name:'😂 Comedy / กวน / พีค',text:'COMEDY STORY DNA. เปิดด้วยสถานการณ์หรือประโยคที่ชวนสงสัย. สร้าง Setup ให้คนเข้าใจผิดได้. ค่อย ๆ เพิ่มความ absurd หรือความซวย. ใช้ reaction เป็นตัวขยายมุก. เก็บ Punchline ไว้ให้ถึงจังหวะ. ห้ามยิงมุกทุกประโยค. ให้เรื่องเดินก่อน แล้วมุกเกิดจากเหตุการณ์.'},
- horror:{name:'👻 Horror / หลอน / Mystery',text:'HORROR STORY DNA. เริ่มจากเหตุการณ์ธรรมดา. ใส่รายละเอียดเล็ก ๆ ที่ผิดปกติ. ไม่รีบเฉลย. ใช้ silence, pause, negative space และ information delay. ค่อย ๆ เพิ่มความผิดปกติ. ให้ผู้ฟังสงสัยก่อนกลัว. Reveal ต้องมีเหตุผลจากสิ่งที่ปูไว้. Ending อาจทิ้งความรู้สึกค้าง.'},
- drama:{name:'💔 Drama / Emotional',text:'EMOTIONAL STORY DNA. เน้นความเป็นมนุษย์และความสัมพันธ์. ใช้รายละเอียดจริงและความคิดในใจ. ไม่บังคับร้องไห้หรือสรุปข้อคิด. สร้าง emotional change จากเหตุการณ์. จุดพีคคือความจริงหรือความรู้สึกที่ถูกเปิดเผย. จบด้วย realization หรือประโยคสั้น ๆ ที่มีน้ำหนัก.'},
- twist:{name:'🌀 Mystery / Twist',text:'TWIST STORY DNA. สร้างคำถามตั้งแต่ต้น. ให้ข้อมูลเพียงบางส่วน. ใช้รายละเอียดที่ดูธรรมดาเป็น clue. ทำให้ผู้ฟังเชื่อคำอธิบายหนึ่งก่อน. ค่อย reveal ข้อมูลที่เปลี่ยนความหมายของเรื่อง. Twist ต้องย้อนกลับไปอธิบายสิ่งที่เห็นก่อนหน้าได้. Payoff ต้องคุ้มกับ Open Loop.'},
- experience:{name:'🗣️ ประสบการณ์จริง / Confession',text:'PERSONAL EXPERIENCE DNA. เล่าแบบ FIRST PERSON. ใช้ความคิดและ reaction ของผู้เล่า. รักษาความไม่สมบูรณ์ของภาษาพูด. ให้เหตุการณ์เป็นตัวเดินเรื่อง. ไม่แต่งข้อเท็จจริงหากผู้ใช้ระบุว่าเรื่องจริง. เน้นรายละเอียดเฉพาะที่ทำให้ผู้ฟังรู้สึกว่าอยู่ตรงนั้นด้วย.'}
-};
-;
-const DEFAULT_MASTER_STRUCTURE = `UNIVERSAL STORY STRUCTURE กลาง
 
-01 ATTENTION / INTERRUPT
-02 CONTEXT / HUMAN SETUP
-03 TRIGGERING EVENT
+/* =====================================================
+   PART 5 — MASTER STRUCTURE + PROMPT BUILDER
+===================================================== */
+
+const MASTER_KEY="STORY_MASTER_STRUCTURE_V9";
+
+/* ---------- โหลด Master ---------- */
+
+const defaultMaster=`UNIVERSAL STORY STRUCTURE กลาง
+
+01 ATTENTION
+02 CONTEXT
+03 TRIGGER
 04 REACTION
 05 ESCALATION
-06 OPEN LOOP / INFORMATION DELAY
-07 REVELATION / TURNING POINT
-08 TWIST OR EMOTIONAL CLIMAX
+06 OPEN LOOP
+07 REVELATION
+08 CLIMAX
 09 PAYOFF
-10 REFLECTION / CALLBACK
-11 NATURAL ENDING
+10 ENDING`;
 
-ADAPTIVE RULE:
-ไม่จำเป็นต้องใช้ทุก Stage หากไม่เหมาะกับเรื่อง แต่ห้ามทำลายลำดับ Narrative, Emotional Arc, Information Release และ Payoff`;
+function loadMaster(){
 
-const MASTER_KEY = 'STORY_STRUCTURE_MASTER_V5';
-let masterStructure = localStorage.getItem(MASTER_KEY) || DEFAULT_MASTER_STRUCTURE;
+const saved=localStorage.getItem(MASTER_KEY);
 
-function loadPresetsSafe(){
-  try{
-    const raw=localStorage.getItem(PS);
-    if(!raw) return {...defaultPresets};
-    const parsed=JSON.parse(raw);
-    if(!parsed || typeof parsed!=='object' || Array.isArray(parsed) || Object.keys(parsed).length===0) return {...defaultPresets};
-    // กรอง preset ที่ข้อมูลไม่ครบ และเติม default หาก localStorage เก่ามีข้อมูลเสีย
-    const valid={};
-    Object.keys(parsed).forEach(k=>{
-      const p=parsed[k];
-      if(p && typeof p==='object' && String(p.name||'').trim() && String(p.text||'').trim()) valid[k]=p;
-    });
-    return Object.keys(valid).length ? valid : {...defaultPresets};
-  }catch(e){
-    return {...defaultPresets};
-  }
-}
-let presets=loadPresetsSafe();
-// ถ้า localStorage เคยเก็บค่า {} หรือ preset เสีย ให้เขียนค่าเริ่มต้นกลับทันที
-if(!Object.keys(presets).length) presets={...defaultPresets};
-localStorage.setItem(PS,JSON.stringify(presets));
-let data=JSON.parse(localStorage.getItem(LS)||'null')||{
- topic:{enabled:true,items:[{name:'หัวข้อเรื่อง',text:''}]},
- context:{enabled:true,items:[{name:'ข้อมูลเพิ่มเติม',text:''}]},
- facts:{enabled:true,items:[{name:'ข้อเท็จจริง / เหตุการณ์',text:''}]},
- type:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'COMEDY',text:'COMEDY'},{name:'DRAMA',text:'DRAMA'},{name:'HORROR',text:'HORROR'},{name:'MYSTERY',text:'MYSTERY'},{name:'TWIST',text:'TWIST'},{name:'LOVE',text:'LOVE'},{name:'LIFE STORY',text:'LIFE STORY'},{name:'EXPERIENCE',text:'EXPERIENCE'},{name:'CONFESSION',text:'CONFESSION'},{name:'INSPIRATION',text:'INSPIRATION'}]},
- angle:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'กูเจอมากับตัว',text:'PERSONAL EXPERIENCE'},{name:'เมาท์ให้เพื่อนฟัง',text:'FRIENDLY GOSSIP / CONVERSATIONAL'},{name:'ชวนสงสัย',text:'MYSTERY / CURIOSITY'},{name:'ฮาแบบธรรมชาติ',text:'COMEDIC'},{name:'ดราม่า',text:'EMOTIONAL'},{name:'หลอน',text:'SUSPENSE / HORROR'},{name:'หักมุม',text:'TWIST'}]},
- pov:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'กู / ฉัน — First Person',text:'FIRST PERSON'},{name:'มึง — Second Person',text:'SECOND PERSON'},{name:'ผู้เล่า — Third Person',text:'THIRD PERSON'}]},
- tone:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'RAW / ภาษาพูด',text:'RAW CONVERSATIONAL'},{name:'กวน',text:'PLAYFUL / SARCASTIC'},{name:'จริงจัง',text:'SERIOUS'},{name:'หลอน',text:'SUSPENSEFUL'},{name:'ดราม่า',text:'EMOTIONAL'},{name:'อบอุ่น',text:'WARM / REFLECTIVE'}]},
- emotion:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'อยากรู้',text:'CURIOSITY'},{name:'ขำ',text:'AMUSEMENT'},{name:'ลุ้น',text:'SUSPENSE'},{name:'ช็อก',text:'SHOCK'},{name:'สะเทือนใจ',text:'EMOTIONAL IMPACT'},{name:'อบอุ่น',text:'WARMTH'},{name:'คิดตาม',text:'REFLECTION'}]},
- duration:{enabled:true,items:[{name:'10 วินาที / Scene (FIXED)',text:'10 seconds per scene'}]},
- scenes:{enabled:true,items:[{name:'1 Scene',text:'1'},{name:'2 Scenes',text:'2'},{name:'3 Scenes',text:'3'},{name:'4 Scenes',text:'4'},{name:'5 Scenes',text:'5'},{name:'6 Scenes',text:'6'},{name:'8 Scenes',text:'8'},{name:'10 Scenes',text:'10'}]},
- structure:{enabled:true,items:[{name:'STORY STRUCTURE กลาง (MASTER)',text:''}]},
- reference:{enabled:false,items:[{name:'ไม่มี Reference',text:'NO REFERENCE'}]},
- voice:{enabled:true,items:[{name:'AUTO',text:'AUTO'},{name:'กู / มึง / แม่ง / ว่ะ',text:'RAW THAI FRIEND-TO-FRIEND: กู มึง แม่ง ว่ะ เออ คือ แบบ'}]},
- vdo:{enabled:false,items:[{name:'9:16 TikTok',text:'Vertical 9:16'},{name:'Real Smartphone UGC',text:'Authentic handheld smartphone realism'}]}
-};
-function save(){localStorage.setItem(LS,JSON.stringify(data));localStorage.setItem(PS,JSON.stringify(presets))}
-function get(key){if(!data[key]?.enabled)return '';let s=document.getElementById(key+'_s');return s?data[key].items[Number(s.value)]?.text||'':''}
-function section(title,key){let c=data[key];if(!c?.enabled)return '';return `<div class="card"><h2>${title}</h2><select id="${key}_s" onchange="buildPrompt()">${c.items.map((x,i)=>`<option value="${i}">${esc(x.name)}</option>`).join('')}</select><div class="row"><button class="add" onclick="openItem('${key}')">➕ เพิ่ม</button><button class="edit" onclick="editItem('${key}')">✏️ แก้ไข</button><button class="del" onclick="delItem('${key}')">🗑 ลบ</button></div></div>`}
-function render(){
-  document.getElementById('menu').innerHTML=
-    section('📝 หัวข้อ / เรื่อง','topic')+
-    section('📌 Context / ฉากหลัง','context')+
-    section('🧾 Facts / เหตุการณ์ที่ต้องรักษา','facts')+
-    section('🎭 Story Type','type')+
-    section('🎯 Story Angle','angle')+
-    section('👁 POV / มุมมอง','pov')+
-    section('❤️ Emotional Target','emotion');
-  buildPrompt();
+const box=document.getElementById("masterStructure");
+
+if(!box)return;
+
+box.value=saved||defaultMaster;
+
 }
 
-function renderPresets(){
-  const select=document.getElementById('presetSelect');
-  const tags=document.getElementById('presetTags');
-  if(!select)return;
-  let keys=Object.keys(presets).filter(k=>presets[k] && presets[k].name && presets[k].text);
-  if(!keys.length){
-    presets={...defaultPresets};
-    keys=Object.keys(presets);
-    localStorage.setItem(PS,JSON.stringify(presets));
-  }
-  select.innerHTML=keys.map(k=>`<option value="${esc(k)}">${esc(presets[k].name)}</option>`).join('');
-  const current=localStorage.getItem('STORY_ACTIVE_PRESET_V5')||keys[0];
-  select.value=keys.includes(current)?current:keys[0];
-  const p=presets[select.value];
-  if(tags && p){
-    tags.innerHTML=(p.text.match(/(?:3D|RAW|COMEDY|DRAMA|HORROR|MYSTERY|TWIST|EMOTIONAL|FIRST PERSON|CONVERSATIONAL)/gi)||[])
-      .slice(0,8).map(x=>`<span class="tag">${esc(x)}</span>`).join('');
-  }
+/* ---------- บันทึก ---------- */
+
+document.getElementById("saveMasterBtn")
+?.addEventListener("click",()=>{
+
+const text=document
+.getElementById("masterStructure")
+.value.trim();
+
+localStorage.setItem(MASTER_KEY,text);
+
+document.getElementById("masterStatus")
+.textContent="บันทึก Master Structure แล้ว";
+
+});
+
+/* ---------- Import ---------- */
+
+document.getElementById("importMasterBtn")
+?.addEventListener("click",()=>{
+
+const preset=document.getElementById("presetSelect");
+
+if(!preset)return;
+
+const p=presets[preset.value];
+
+if(!p)return;
+
+const box=document.getElementById("masterStructure");
+
+box.value=`${box.value}
+
+# STYLE DNA
+${p.text}`;
+
+});
+
+/* ---------- Reset ---------- */
+
+document.getElementById("resetMasterBtn")
+?.addEventListener("click",()=>{
+
+if(!confirm("คืนค่า Master Structure?"))return;
+
+localStorage.removeItem(MASTER_KEY);
+
+loadMaster();
+
+});
+
+/* =====================================================
+   PROMPT BUILDER
+===================================================== */
+
+function buildPrompt(){
+
+const topic=document.getElementById("topic").value.trim();
+
+const type=document.getElementById("storyType").value;
+const angle=document.getElementById("storyAngle").value;
+const pov=document.getElementById("storyPOV").value;
+const tone=document.getElementById("storyTone").value;
+const emotion=document.getElementById("emotionalTarget").value;
+const voice=document.getElementById("voiceDNA").value;
+
+const visual=document.getElementById("visualStyle").value;
+
+const character=document.getElementById("lockCharacter").value.trim();
+const location=document.getElementById("lockLocation").value.trim();
+const atmosphere=document.getElementById("lockAtmosphere").value.trim();
+const environment=document.getElementById("lockEnvironment").value.trim();
+
+const rhythm=document.getElementById("speechRhythm").value;
+const speech=document.getElementById("speechStyle").value;
+const voiceTone=document.getElementById("voiceTone").value;
+const speed=document.getElementById("voiceSpeed").value;
+
+const master=document.getElementById("masterStructure").value.trim();
+
+const current=getCurrentScene();
+const total=getSceneCount();
+
+document.getElementById("sceneBadge")
+.textContent=`Scene ${current}/${total}`;
+
+document.getElementById("promptSceneText")
+.textContent=`Scene ${current}/${total} พร้อมสร้าง`;
+
+const prompt=`######
+AI STORY BUILDER V9 PRO
+
+Scene ${current}/${total}
+Duration: 10 seconds FIXED
+
+==================================================
+MASTER STRUCTURE
+==================================================
+
+${master}
+
+==================================================
+INPUT
+==================================================
+
+TOPIC:
+${topic||"[กรุณาใส่หัวข้อ]"}
+
+Story Type:
+${type}
+
+Story Angle:
+${angle}
+
+POV:
+${pov}
+
+Tone:
+${tone}
+
+Emotional Target:
+${emotion}
+
+Voice DNA:
+${voice}
+
+==================================================
+CONTINUITY LOCK
+==================================================
+
+Character:
+${character||"[LOCKED]"}
+
+Location:
+${location||"[LOCKED]"}
+
+Atmosphere:
+${atmosphere||"[LOCKED]"}
+
+Environment:
+${environment||"[LOCKED]"}
+
+==================================================
+VOICE LOCK
+==================================================
+
+Rhythm:
+${rhythm}
+
+Speech:
+${speech}
+
+Voice Tone:
+${voiceTone}
+
+Speed:
+${speed}
+
+==================================================
+VISUAL STYLE
+==================================================
+
+${visual}
+
+==================================================
+RULES
+==================================================
+
+- Create only Scene ${current}.
+- Duration exactly 10 seconds.
+- Dialogue must finish within 10 seconds.
+- Follow MASTER STRUCTURE.
+- Keep Character Lock.
+- Keep Location Lock.
+- Keep Atmosphere Lock.
+- Keep Environment Lock.
+- Keep Voice DNA.
+- Do NOT restart the story.
+- Do NOT create Scene ${current+1}.
+
+If user types:
+"ต่อ"
+or
+"ฉากต่อไป"
+
+Create only the next Scene.
+
+==================================================
+OUTPUT FORMAT
+==================================================
+
+SCENE ${current}
+
+TIME:
+00:00–00:10
+
+MASTER STAGE:
+
+STORY PURPOSE:
+
+VISUAL:
+
+ACTION:
+
+CAMERA:
+
+VOICE / DELIVERY:
+
+DIALOGUE:
+
+AUDIO:
+
+END BEAT:
+
+NEXT SCENE HANDOFF:
+`;
+
+document.getElementById("promptOutput")
+.textContent=prompt;
+
 }
 
-function loadPreset(){
-  const select=document.getElementById('presetSelect');
-  if(!select)return;
-  const p=presets[select.value];
-  if(!p)return;
-  localStorage.setItem('STORY_ACTIVE_PRESET_V5',select.value);
-  const tags=document.getElementById('presetTags');
-  if(tags){
-    const tagsFound=(p.text.match(/(?:3D|RAW|COMEDY|DRAMA|HORROR|MYSTERY|TWIST|EMOTIONAL|FIRST PERSON|CONVERSATIONAL)/gi)||[]);
-    tags.innerHTML=[...new Set(tagsFound)].slice(0,8).map(x=>`<span class="tag">${esc(x)}</span>`).join('');
-  }
-  // Preset เป็น Story Style DNA ไม่เขียนทับ Master Structure หรือ Scene Locks
-  buildPrompt();
-}
+/* ---------- Build Button ---------- */
 
-function openPresetModal(){editKey=null;document.getElementById('presetTitle').innerText='➕ เพิ่ม Story Preset';document.getElementById('presetName').value='';document.getElementById('presetText').value='';document.getElementById('presetModal').classList.add('show')}
-function editPresetModal(){let k=document.getElementById('presetSelect').value,p=presets[k];if(!p)return;editKey=k;document.getElementById('presetTitle').innerText='✏️ แก้ไข Story Preset';document.getElementById('presetName').value=p.name;document.getElementById('presetText').value=p.text;document.getElementById('presetModal').classList.add('show')}
-function closePresetModal(){document.getElementById('presetModal').classList.remove('show')}
-function savePresetModal(){let n=document.getElementById('presetName').value.trim(),t=document.getElementById('presetText').value.trim();if(!n||!t)return alert('กรอกชื่อและรายละเอียดก่อน');let k=(editKey||n).toLowerCase().replace(/[^a-z0-9ก-๙]+/gi,'_');presets[k]={name:n,text:t};save();renderPresets();document.getElementById('presetSelect').value=k;loadPreset();closePresetModal()}
-function openItem(k){editKey=k;editIndex=-1;document.getElementById('itemTitle').innerText='➕ เพิ่มข้อมูล';document.getElementById('itemName').value='';document.getElementById('itemText').value='';document.getElementById('itemModal').classList.add('show')}
-function editItem(k){let s=document.getElementById(k+'_s');if(!s)return;editKey=k;editIndex=Number(s.value);let x=data[k].items[editIndex];document.getElementById('itemTitle').innerText='✏️ แก้ไขข้อมูล';document.getElementById('itemName').value=x.name;document.getElementById('itemText').value=x.text;document.getElementById('itemModal').classList.add('show')}
-function closeItemModal(){document.getElementById('itemModal').classList.remove('show')}
-function saveItemModal(){let n=document.getElementById('itemName').value.trim(),t=document.getElementById('itemText').value.trim();if(!n&&!t)return alert('กรอกข้อมูลก่อน');let x={name:n||t,text:t||n};if(editIndex>=0)data[editKey].items[editIndex]=x;else data[editKey].items.push(x);save();render();closeItemModal()}
-function delItem(k){let s=document.getElementById(k+'_s');if(!s)return;let i=Number(s.value);if(data[k].items.length<=1)return alert('ต้องเหลืออย่างน้อย 1 รายการ');if(confirm('ลบรายการนี้?')){data[k].items.splice(i,1);save();render()}}
-function deletePreset(){let s=document.getElementById('presetSelect'),k=s.value;if(Object.keys(presets).length<=1)return alert('ต้องเหลืออย่างน้อย 1 Preset');if(confirm('ลบ Preset นี้?')){delete presets[k];save();renderPresets();loadPreset()}}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function modeTopic(){mode='topic';data.reference.enabled=false;data.vdo.enabled=false;setActive('btnTopic');render()}
-function modeReference(){mode='ref';data.reference.enabled=true;data.vdo.enabled=false;setActive('btnRef');render()}
-function modeVdo(){mode='vdo';data.reference.enabled=false;data.vdo.enabled=true;setActive('btnVdo');render()}
-function setActive(id){['btnTopic','btnRef','btnVdo'].forEach(x=>document.getElementById(x).classList.remove('active-mode'));document.getElementById(id).classList.add('active-mode')}
+document.getElementById("buildPromptBtn")
+?.addEventListener("click",buildPrompt);
 
-const ANALYZER_COMMAND = `วิเคราะห์ไฟล์เสียง MP3 ที่แนบมา เพื่อสกัด STORY STRUCTURE จากวิธีเล่าเรื่องจริงในไฟล์
+/* ---------- Copy ---------- */
+
+document.getElementById("copyPromptBtn")
+?.addEventListener("click",()=>{
+
+navigator.clipboard.writeText(
+
+document.getElementById("promptOutput")
+.textContent
+
+);
+
+alert("คัดลอก Prompt แล้ว");
+
+});
+
+/* ---------- Scene Button ---------- */
+
+document.getElementById("generateSceneBtn")
+?.addEventListener("click",buildPrompt);
+
+/* ---------- Queue ---------- */
+
+document.getElementById("queueBtn")
+?.addEventListener("click",()=>{
+
+const total=getSceneCount();
+
+const text=`ระบบ Multi-Scene พร้อมแล้ว
+
+Scene 1/${total}
+
+1. Copy Prompt นี้ไป ChatGPT
+2. ChatGPT สร้าง Scene 1
+3. พิมพ์ "ต่อ"
+4. ChatGPT สร้าง Scene 2
+5. พิมพ์ "ต่อ" อีกครั้ง
+6. ทำซ้ำจนถึง Scene ${total}/${total}
+
+ทุก Scene = 10 วินาที
+รักษา Master Structure + Continuity Lock + Voice DNA`;
+
+document.getElementById("promptOutput")
+.textContent=text;
+
+});
+
+/* ---------- INIT ---------- */
+
+loadMaster();
+
+buildPrompt();
+
+</script>
+
+<!-- ===== จบ PART 5 ===== -->
+
+<!-- =========================================
+     PART 6 — MENU ACTIONS + AUTO SAVE
+========================================= -->
+
+<script>
+
+/* =====================================================
+   MP3 ANALYZER COMMAND
+===================================================== */
+
+const ANALYZER_COMMAND=`วิเคราะห์ไฟล์เสียง MP3 ที่แนบมา เพื่อสกัด STORY STRUCTURE จากวิธีเล่าเรื่องจริงในไฟล์
 
 ห้ามสร้างเรื่องใหม่
 ห้ามสรุปแค่เนื้อหาว่าเรื่องพูดถึงอะไร
@@ -424,10 +1836,8 @@ const ANALYZER_COMMAND = `วิเคราะห์ไฟล์เสียง
 
 🧬 STORY STRUCTURE กลาง
 
-โดยต้อง “ตัดเนื้อเรื่องเฉพาะของคลิปออก”
-และเหลือเฉพาะ “โครงสร้างและวิธีเล่า” ที่สามารถนำไปใช้กับเรื่องอื่นได้
-
-สำคัญ:
+โดยต้องตัดเนื้อเรื่องเฉพาะของคลิปออก
+และเหลือเฉพาะโครงสร้างและวิธีเล่าที่สามารถนำไปใช้กับเรื่องอื่นได้
 
 REFERENCE AUDIO = แหล่งวิเคราะห์วิธีเล่า
 ไม่ใช่เนื้อเรื่องสำหรับ Copy
@@ -449,272 +1859,331 @@ REFERENCE AUDIO = แหล่งวิเคราะห์วิธีเล�
 - Rhythm DNA
 - Payoff Pattern
 
-สุดท้ายให้แสดงผลเป็น:
-
-OUTPUT 1 — TRANSCRIPT
-OUTPUT 2 — STORY TIMELINE
-OUTPUT 3 — REAL STORY SEQUENCE
-OUTPUT 4 — EMOTIONAL ARC
-OUTPUT 5 — VOICE & DELIVERY DNA
-OUTPUT 6 — RETENTION DNA
-OUTPUT 7 — STORY DNA
-OUTPUT 8 — 🧬 STORY STRUCTURE กลาง
-OUTPUT 9 — 1–5 SCENE DISTRIBUTION
-OUTPUT 10 — MASTER PRIORITY RULE
+OUTPUT:
+1. TRANSCRIPT
+2. STORY TIMELINE
+3. REAL STORY SEQUENCE
+4. EMOTIONAL ARC
+5. VOICE & DELIVERY DNA
+6. RETENTION DNA
+7. STORY DNA
+8. STORY STRUCTURE กลาง
+9. SCENE DISTRIBUTION
+10. MASTER PRIORITY RULE
 
 OUTPUT ทั้งหมดต้องอยู่ใน Markdown Code Block`;
 
-function copyAnalyzerCommand(){
-  navigator.clipboard.writeText(ANALYZER_COMMAND).then(()=>alert('คัดลอกคำสั่งวิเคราะห์ไฟล์เสียงแล้ว'));
+/* =====================================================
+   MENU BUTTONS
+===================================================== */
+
+document.getElementById("btnVoice")
+?.addEventListener("click",()=>{
+
+window.open(
+"https://countik.com/th/tiktok-video-to-mp3-converter",
+"_blank"
+);
+
+});
+
+document.getElementById("btnGem")
+?.addEventListener("click",()=>{
+
+window.open(
+"https://gemini.google.com/gem/1NQlXP6luO-FQ28PU5ATlhEAc7C7eC12v?usp=sharing",
+"_blank"
+);
+
+});
+
+document.getElementById("copyCommand")
+?.addEventListener("click",async()=>{
+
+try{
+
+await navigator.clipboard.writeText(ANALYZER_COMMAND);
+
+alert("คัดลอกคำสั่งวิเคราะห์ MP3 แล้ว");
+
+}catch(e){
+
+alert("ไม่สามารถคัดลอกได้");
+
 }
 
-function lockValue(id){
-  const checked=document.getElementById(id)?.checked;
-  const value=document.getElementById(id.replace('lock','').replace(/^./,m=>m.toLowerCase())+'Lock')?.value;
-  return checked ? (value||'[LOCKED — ยังไม่ได้กำหนดค่า]') : '[UNLOCKED — ปรับตาม Story ได้]';
+});
+
+/* =====================================================
+   AUTO SAVE ENGINE
+===================================================== */
+
+const FORM_KEY="STORY_FORM_V9";
+
+const SAVE_IDS=[
+
+"topic",
+"storyType",
+"storyAngle",
+"storyPOV",
+"storyTone",
+"emotionalTarget",
+"voiceDNA",
+
+"lockCharacter",
+"lockLocation",
+"lockAtmosphere",
+"lockEnvironment",
+
+"speechRhythm",
+"speechStyle",
+"voiceTone",
+"voiceSpeed",
+
+"visualStyle",
+"sceneCount",
+
+"masterStructure"
+
+];
+
+function saveForm(){
+
+const data={};
+
+SAVE_IDS.forEach(id=>{
+
+const el=document.getElementById(id);
+
+if(!el)return;
+
+data[id]=el.value;
+
+});
+
+localStorage.setItem(
+FORM_KEY,
+JSON.stringify(data)
+);
+
 }
 
-function getContinuityLocks(){
-  return {
-    character: document.getElementById('lockCharacter')?.checked ? document.getElementById('characterLock')?.value.trim() : '[UNLOCKED]',
-    location: document.getElementById('lockLocation')?.checked ? document.getElementById('locationLock')?.value.trim() : '[UNLOCKED]',
-    atmosphere: document.getElementById('lockAtmosphere')?.checked ? document.getElementById('atmosphereLock')?.value.trim() : '[UNLOCKED]',
-    environment: document.getElementById('lockEnvironment')?.checked ? document.getElementById('environmentLock')?.value.trim() : '[UNLOCKED]'
-  };
+function restoreForm(){
+
+try{
+
+const data=JSON.parse(
+
+localStorage.getItem(FORM_KEY)
+
+);
+
+if(!data)return;
+
+Object.keys(data).forEach(id=>{
+
+const el=document.getElementById(id);
+
+if(el){
+
+el.value=data[id];
+
 }
 
-function getDeliveryDNA(){
-  return {
-    pace:document.getElementById('deliveryPace')?.value||'ธรรมชาติ / Conversational',
-    tone:document.getElementById('voiceTone')?.value||'เป็นกันเอง',
-    color:document.getElementById('voiceColor')?.value||'Raw Thai Conversational',
-    speed:document.getElementById('speechSpeed')?.value||'1.00x'
-  };
+});
+
+}catch(e){
+
+console.log("restore fail");
+
 }
 
-function getSceneCount(){
-  return Number(document.getElementById('sceneCount')?.value||1);
 }
 
-function getVisualStyle(){
-  return document.getElementById('visualStyle')?.value||'Realistic Storytelling';
+/* =====================================================
+   AUTO LISTENER
+===================================================== */
+
+SAVE_IDS.forEach(id=>{
+
+const el=document.getElementById(id);
+
+if(!el)return;
+
+el.addEventListener("input",saveForm);
+
+el.addEventListener("change",saveForm);
+
+});
+
+/* =====================================================
+   CLEAR ALL
+===================================================== */
+
+function clearAll(){
+
+if(!confirm("รีเซ็ตข้อมูลทั้งหมด?"))return;
+
+localStorage.removeItem(FORM_KEY);
+localStorage.removeItem(MASTER_KEY);
+localStorage.removeItem(PS);
+localStorage.removeItem(ACTIVE);
+localStorage.removeItem(SCENE_KEY);
+
+location.reload();
+
 }
 
-function sceneWordsFor10Sec(speed){
-  if(String(speed).includes('1.20')) return 'ประมาณ 24–32 คำไทย';
-  if(String(speed).includes('1.10')) return 'ประมาณ 22–30 คำไทย';
-  if(String(speed).includes('0.90')) return 'ประมาณ 16–23 คำไทย';
-  return 'ประมาณ 18–27 คำไทย';
+/* =====================================================
+   SCENE STATUS UPDATE
+===================================================== */
+
+function refreshStatus(){
+
+const total=getSceneCount();
+const current=getCurrentScene();
+
+const badge=document.getElementById("sceneBadge");
+
+if(badge){
+
+badge.textContent=`Scene ${current}/${total}`;
+
 }
 
-function buildContinuationPrompt(sceneNumber){
-  const locks=getContinuityLocks(),dna=getDeliveryDNA(),style=getVisualStyle();
-  return `ฉากต่อไป
+const text=document.getElementById("promptSceneText");
 
-สร้าง Scene ${sceneNumber} ต่อจาก Scene ก่อนหน้า
+if(text){
 
-กฎบังคับ:
-- ความยาว 10 วินาทีพอดี
-- รักษา STORY STRUCTURE กลางเดิม
-- รักษาตัวละครเดิม: ${locks.character||'[ตาม Scene ก่อนหน้า]'}
-- รักษาสถานที่เดิม: ${locks.location||'[ตาม Scene ก่อนหน้า]'}
-- รักษาบรรยากาศเดิม: ${locks.atmosphere||'[ตาม Scene ก่อนหน้า]'}
-- รักษาสภาพแวดล้อมเดิม: ${locks.environment||'[ตาม Scene ก่อนหน้า]'}
-- จังหวะการพูด: ${dna.pace}
-- น้ำเสียง: ${dna.tone}
-- โทนเสียง: ${dna.color}
-- ความเร็วการพูด: ${dna.speed}
-- บทพูดต้องจบภายใน 10 วินาที ห้ามพูดเกินเวลา
-- ความยาวบทพูด: ${sceneWordsFor10Sec(dna.speed)}
-- Visual Style: ${style}
-- ห้ามรีเซ็ตเรื่อง ห้ามเริ่มต้นใหม่ ห้ามย้อนกลับไปสร้าง Hook ใหม่
-- ให้ต่อจากเหตุการณ์ล่าสุดทันที
+text.textContent=`Scene ${current}/${total} พร้อมสร้าง`;
 
-เมื่อได้รับคำว่า “ต่อ” หรือ “ฉากต่อไป” ให้สร้าง Scene ถัดไปเพียง 1 Scene เท่านั้น
-
-OUTPUT:
-SCENE ${sceneNumber}
-TIME: 00:00–00:10
-STORY FUNCTION:
-VISUAL:
-ACTION:
-CAMERA:
-VOICE / DELIVERY:
-DIALOGUE:
-AUDIO:
-CONTINUITY LOCK:
-END BEAT / HANDOFF:`;
 }
 
-function buildPrompt(){
-  const topic=get('topic'),context=get('context'),facts=get('facts'),type=get('type'),
-        angle=get('angle'),pov=get('pov'),emotion=get('emotion'),structure=masterStructure,
-        scenes=getSceneCount(),locks=getContinuityLocks(),dna=getDeliveryDNA(),visual=getVisualStyle();
-  const activePresetKey=document.getElementById('presetSelect')?.value;
-  const activePreset=presets[activePresetKey]||{};
-  const presetDNA=activePreset.text||'[AUTO STORY STYLE]';
-  const speed=dna.speed, words=sceneWordsFor10Sec(speed);
+}
 
-  const prompt=`######
-UNIVERSAL STORY BUILDER — MULTI-SCENE MASTER EDITION
-TOPIC → STORY → MASTER STRUCTURE → SCENE CONTINUITY → CHATGPT
+/* =====================================================
+   INIT
+===================================================== */
+
+restoreForm();
+
+refreshStatus();
+
+buildPrompt();
+
+</script>
+
+<!-- ===== จบ PART 6 ===== -->
+
+<!-- =========================================
+     PART 7 — CHATGPT CONTINUATION ENGINE
+========================================= -->
+
+<script>
+
+/* =====================================================
+   CONTINUATION ENGINE
+   ต่อ → Scene ถัดไป
+===================================================== */
+
+const CONTINUE_WORDS=[
+"ต่อ",
+"ฉากต่อไป",
+"next",
+"continue"
+];
+
+function wordsFor10Sec(speed){
+
+if(speed.includes("1.10")) return "22–30 คำไทย";
+
+if(speed.includes("0.90")) return "16–23 คำไทย";
+
+return "18–27 คำไทย";
+
+}
+
+/* ---------- สร้าง Prompt ของ Scene ปัจจุบัน ---------- */
+
+function buildScenePrompt(sceneNumber){
+
+const total=getSceneCount();
+
+const character=document.getElementById("lockCharacter").value||"[LOCKED]";
+const location=document.getElementById("lockLocation").value||"[LOCKED]";
+const atmosphere=document.getElementById("lockAtmosphere").value||"[LOCKED]";
+const environment=document.getElementById("lockEnvironment").value||"[LOCKED]";
+
+const rhythm=document.getElementById("speechRhythm").value;
+const speech=document.getElementById("speechStyle").value;
+const voiceTone=document.getElementById("voiceTone").value;
+const speed=document.getElementById("voiceSpeed").value;
+
+const visual=document.getElementById("visualStyle").value;
+
+const master=document.getElementById("masterStructure").value;
+
+const topic=document.getElementById("topic").value;
+
+const previous=sceneNumber===1
+?"เริ่มเรื่องตาม MASTER STRUCTURE"
+:`ต่อจาก Scene ${sceneNumber-1} โดยห้ามรีเซ็ตเรื่อง`;
+
+return `######
+CHATGPT MULTI-SCENE STORY
+
+SCENE ${sceneNumber}/${total}
+10 SECONDS FIXED
 ######
 
-ROLE:
-คุณคือ AI Story Architect, Narrative Director, Thai Conversational Storyteller,
-Multi-Scene Continuity Director, Voice Delivery Director และ VDO Prompt Engineer
-
-==================================================
-STORY STYLE PRESET — ACTIVE
-==================================================
-
-${presetDNA}
-
-Preset นี้ควบคุมสไตล์การเล่าเท่านั้น และไม่มีสิทธิ์ override STORY STRUCTURE กลาง, Continuity Lock, Voice & Delivery Lock หรือเวลา 10 วินาที
-
-==================================================
-ABSOLUTE MASTER RULE — PRIORITY #1
-==================================================
-
-🧬 STORY STRUCTURE กลาง = MASTER STRUCTURE
-
-ก่อนสร้าง Story / Scene / Voiceover / VDO Prompt:
-ต้องอ่าน STORY STRUCTURE กลางก่อนเสมอ
-
-ห้าม:
-- สร้าง Structure ใหม่
-- สลับลำดับ Stage
-- ทำลาย Emotional Arc
-- ย้าย Reveal / Twist / Climax / Payoff
-- ให้ Camera / B-roll / Editing / Voice / Visual override Master
-
-หากคำสั่งใดขัดกับ Master:
-MASTER STRUCTURE ชนะเสมอ
+${previous}
 
 ==================================================
 MASTER STRUCTURE
 ==================================================
 
-${structure}
+${master}
 
 ==================================================
-STORY INPUT
+TOPIC
 ==================================================
 
-หัวข้อ:
-${topic||'[กรุณาใส่หัวข้อเรื่อง]'}
-
-Context:
-${context||'[AUTO]'}
-
-Facts ที่ต้องรักษา:
-${facts||'[NONE]'}
-
-Story Type:
-${type}
-
-Story Angle:
-${angle}
-
-POV:
-${pov}
-
-Emotional Target:
-${emotion}
+${topic}
 
 ==================================================
-SCENE SYSTEM — FIXED 10 SECONDS
+CONTINUITY LOCK
 ==================================================
 
-จำนวน Scene:
-${scenes}
+Character:
+${character}
 
-ทุก Scene = 10 วินาที FIXED
+Location:
+${location}
 
-ห้ามสร้าง Scene ที่ยาวกว่า 10 วินาที
-ห้ามรวมหลาย Scene เป็น Scene เดียว
-ห้ามตัดบทพูดกลางคำเพื่อให้พอดีเวลา
+Atmosphere:
+${atmosphere}
 
-แต่ละ Scene ต้องมี:
-TIME: 00:00–00:10
-
-บทพูดต้องจบก่อนหมด 10 วินาที
-ความยาวเป้าหมาย:
-${words}
-
-หากบทพูดไม่พอดี:
-ลดคำ ไม่ใช่เพิ่มเวลา
+Environment:
+${environment}
 
 ==================================================
-CONTINUITY LOCK — ห้ามเปลี่ยนเอง
+VOICE LOCK
 ==================================================
 
-CHARACTER LOCK:
-${locks.character||'[LOCKED — ตาม Scene ก่อนหน้า]'}
+Rhythm:
+${rhythm}
 
-LOCATION LOCK:
-${locks.location||'[LOCKED — ตาม Scene ก่อนหน้า]'}
+Speech:
+${speech}
 
-ATMOSPHERE LOCK:
-${locks.atmosphere||'[LOCKED — ตาม Scene ก่อนหน้า]'}
+Voice Tone:
+${voiceTone}
 
-ENVIRONMENT LOCK:
-${locks.environment||'[LOCKED — ตาม Scene ก่อนหน้า]'}
+Speed:
+${speed}
 
-กฎ:
-ถ้า Lock = ACTIVE
-ทุก Scene ต้องรักษารายละเอียดเดิม
-
-เปลี่ยนได้เฉพาะเมื่อ Story ระบุว่า:
-“ตัวละครเปลี่ยน”
-“ย้ายสถานที่”
-“เวลาเปลี่ยน”
-หรือมีเหตุการณ์ที่ทำให้สภาพแวดล้อมเปลี่ยนอย่างมีเหตุผล
-
-ห้าม AI เปลี่ยนเองเพื่อความสวยงาม
-
-==================================================
-VOICE & DELIVERY LOCK
-==================================================
-
-จังหวะ:
-${dna.pace}
-
-น้ำเสียง:
-${dna.tone}
-
-โทนเสียง:
-${dna.color}
-
-ความเร็ว:
-${dna.speed}
-
-VOICE CONTINUITY:
-ต้องเป็นผู้เล่าคนเดิมตลอดทุก Scene
-
-ใช้:
-- จังหวะหายใจ
-- Pause
-- emphasis
-- เร่งเมื่อเกิดเหตุ
-- ผ่อนเมื่อสร้างอารมณ์
-
-แต่ทั้งหมดต้องสัมพันธ์กับเหตุการณ์ใน Master Structure
-
-==================================================
-RAW THAI STORYTELLING
-==================================================
-
-หาก Tone เป็นภาษาพูด:
-ใช้ภาษาธรรมชาติ เช่น
-กู / มึง / แม่ง / ว่ะ / เออ / คือ / แบบ / แล้ว / ทีนี้
-
-ไม่ต้องใส่คำหยาบทุกประโยค
-
-ต้องฟังเหมือนคนเล่าให้เพื่อนฟังจริง
-ไม่เหมือนบทความ
-ไม่เหมือนโฆษณา
-ไม่เหมือน AI อ่านสคริปต์
+Dialogue:
+${wordsFor10Sec(speed)}
 
 ==================================================
 VISUAL STYLE
@@ -722,564 +2191,566 @@ VISUAL STYLE
 
 ${visual}
 
-หากเลือก 3D:
-- 3D Cinematic
-- realistic material
-- physically believable lighting
-- cinematic depth
-- consistent design
-
-หากเลือก 3D อวัยวะ:
-แสดง anatomy ที่เกี่ยวข้องกับเรื่องเท่านั้น
-
-หากเลือก 3D การแพทย์:
-เน้น medical visualization ที่เข้าใจง่าย
-
-หากเลือก 3D จุลชีพ:
-ใช้ microscopic visualization และต้องแยกจากโลกจริงอย่างชัดเจน
-
-หากเลือก Hybrid:
-ต้องรักษาความต่อเนื่องระหว่างคนจริงกับ 3D visualization
-
 ==================================================
-MULTI-SCENE CONTINUATION PROTOCOL
+RULES
 ==================================================
 
-Scene 1:
-สร้างจาก Master Structure Stage แรกที่เหมาะสม
-
-Scene 2:
-ต้องต่อจาก Scene 1
-
-Scene 3:
-ต้องต่อจาก Scene 2
-
-...
-
-Scene ${scenes}:
-ต้องปิด Narrative / Payoff ตาม Master Structure
-
-ห้ามเริ่มเรื่องใหม่ใน Scene ถัดไป
+- สร้างเพียง Scene ${sceneNumber}
+- ความยาว 10 วินาที
+- ห้ามสร้าง Scene อื่น
+- ห้ามรีเซ็ต Hook
+- ห้ามเปลี่ยน Character
+- ห้ามเปลี่ยน Location
+- ห้ามเปลี่ยน Atmosphere
+- ห้ามเปลี่ยน Voice DNA
+- หากผู้ใช้พิมพ์ "ต่อ" หรือ "ฉากต่อไป"
+  ให้สร้าง Scene ถัดไปเพียง 1 Scene
 
 ==================================================
-CHATGPT NEXT-SCENE COMMAND
+OUTPUT
 ==================================================
 
-หลังจากสร้าง Scene ปัจจุบันแล้ว
-หากผู้ใช้พิมพ์:
-
-“ต่อ”
-หรือ
-“ฉากต่อไป”
-
-ให้ทำเพียง:
-1. อ่าน Scene ล่าสุด
-2. อ่าน Master Structure
-3. อ่าน Continuity Lock
-4. อ่าน Voice & Delivery Lock
-5. อ่าน Visual Style
-6. ระบุ Stage ปัจจุบัน
-7. ไป Stage ถัดไปที่ถูกต้อง
-8. สร้าง Scene ถัดไปเพียง 1 Scene
-
-ห้าม:
-- สร้าง Scene ก่อนหน้าใหม่
-- สรุปเรื่องใหม่
-- เปลี่ยนตัวละคร
-- เปลี่ยนสถานที่
-- เปลี่ยนเสียง
-- เปลี่ยนบรรยากาศ
-- เปลี่ยนโทน
-- รีเซ็ต Hook
-- ข้ามไป Ending ก่อนเวลา
-
-==================================================
-SCENE OUTPUT FORMAT
-==================================================
-
-SCENE ${scenes>1?'1–'+scenes:'1'}
+SCENE ${sceneNumber}
 
 TIME:
 00:00–00:10
 
 MASTER STAGE:
-[Stage ที่กำลังทำหน้าที่]
 
 STORY PURPOSE:
-[หน้าที่ของ Scene]
 
 VISUAL:
-[สิ่งที่เห็น]
-
-CHARACTER:
-[ต้องตรงกับ Character Lock]
-
-LOCATION:
-[ต้องตรงกับ Location Lock]
-
-ATMOSPHERE:
-[ต้องตรงกับ Atmosphere Lock]
-
-ENVIRONMENT:
-[ต้องตรงกับ Environment Lock]
 
 ACTION:
-[การกระทำ]
 
 CAMERA:
-[Camera / Framing / Movement]
 
 VOICE / DELIVERY:
-Pace: ${dna.pace}
-Tone: ${dna.tone}
-Voice Color: ${dna.color}
-Speed: ${dna.speed}
 
 DIALOGUE:
-[บทพูดที่จบภายใน 10 วินาที / ${words}]
 
 AUDIO:
-[เสียงแวดล้อม / SFX / Music ถ้ามี]
 
 END BEAT:
-[จุดส่งต่อไป Scene ถัดไป]
 
-CONTINUITY CHECK:
-✓ Character
-✓ Location
-✓ Atmosphere
-✓ Environment
-✓ Voice
-✓ Timing
-✓ Master Stage
-
-==================================================
-SCENE HANDOFF
-==================================================
-
-ท้าย Scene ทุกครั้งให้สร้าง:
 NEXT SCENE HANDOFF:
-[ข้อมูลสั้น ๆ ที่ Scene ถัดไปต้องรับต่อ]
-
-ห้ามสร้าง Scene ถัดไปเองจนกว่าผู้ใช้จะพิมพ์:
-“ต่อ”
-หรือ
-“ฉากต่อไป”
-
-==================================================
-MASTER VALIDATION
-==================================================
-
-[✓] Master Structure ถูกอ่าน
-[✓] Stage ถูกต้อง
-[✓] Scene ต่อเนื่อง
-[✓] 10 วินาที
-[✓] บทพูดสัมพันธ์กับเวลา
-[✓] Voice Lock
-[✓] Character Lock
-[✓] Location Lock
-[✓] Atmosphere Lock
-[✓] Environment Lock
-[✓] Visual Style Lock
-[✓] Emotional Arc
-[✓] Information Release
-[✓] Payoff Timing
-[✓] ไม่มี Sales CTA ที่ไม่จำเป็น
-
-หากไม่ผ่าน:
-แก้ก่อน Output
-
-OUTPUT LANGUAGE:
-Thai
-
-OUTPUT:
-ONE Markdown Code Block ONLY
-
-######
 `;
-  result.value=prompt;
-  updateSceneBadge();
-  document.getElementById('status').textContent='🔒 Master + Continuity Lock ACTIVE • 10s/Scene • กด “ต่อ / ฉากต่อไป” เพื่อสร้างทีละ Scene';
-}
-function initMasterUI(){
-  const el=document.getElementById('masterStructure');
-  if(el) el.value=masterStructure;
-  syncMasterToData();
+
 }
 
-function syncMasterToData(){
-  if(!data.structure) data.structure={enabled:true,items:[{name:'STORY STRUCTURE กลาง (MASTER)',text:''}]};
-  data.structure.enabled=true;
-  data.structure.items[0]={name:'STORY STRUCTURE กลาง (MASTER)',text:masterStructure};
-  save();
+/* ---------- สร้าง Scene ปัจจุบัน ---------- */
+
+function generateCurrentScene(){
+
+const scene=getCurrentScene();
+
+document.getElementById("promptOutput").textContent=
+buildScenePrompt(scene);
+
+refreshStatus();
+
 }
 
-function saveMasterStructure(){
-  const el=document.getElementById('masterStructure');
-  const value=(el?.value||'').trim();
-  if(!value) return alert('กรุณาใส่ STORY STRUCTURE กลาง ก่อนบันทึก');
-  masterStructure=value;
-  localStorage.setItem(MASTER_KEY,masterStructure);
-  syncMasterToData();
-  document.getElementById('masterStatus').textContent='🔒 MASTER LOCKED • บันทึกแล้ว • Generator ทุกตัวต้องอ่าน Master นี้';
-  buildPrompt();
+/* ---------- ต่อ ---------- */
+
+function continueScene(){
+
+let scene=getCurrentScene();
+const total=getSceneCount();
+
+if(scene>=total){
+
+alert("ครบทุก Scene แล้ว");
+
+return;
+
 }
 
-function importCurrentStructure(){
-  const current=data.structure?.items?.[0]?.text||'';
-  if(!current.trim()) return alert('ยังไม่มี Structure ปัจจุบันให้ส่งเข้า Master');
-  if(!confirm('นำ STORY STRUCTURE ปัจจุบันเข้าเป็น MASTER STRUCTURE ใช่หรือไม่?')) return;
-  masterStructure=current.trim();
-  localStorage.setItem(MASTER_KEY,masterStructure);
-  document.getElementById('masterStructure').value=masterStructure;
-  syncMasterToData();
-  document.getElementById('masterStatus').textContent='🔒 MASTER LOCKED • รับ Structure ปัจจุบันเป็น Master แล้ว';
-  buildPrompt();
+scene++;
+
+saveScene(scene);
+
+generateCurrentScene();
+
 }
 
-function resetMasterStructure(){
-  if(!confirm('คืนค่า STORY STRUCTURE กลาง เป็นค่าเริ่มต้นหรือไม่?')) return;
-  masterStructure=DEFAULT_MASTER_STRUCTURE;
-  localStorage.setItem(MASTER_KEY,masterStructure);
-  document.getElementById('masterStructure').value=masterStructure;
-  syncMasterToData();
-  document.getElementById('masterStatus').textContent='🔒 MASTER LOCKED • คืนค่าเริ่มต้นแล้ว';
-  buildPrompt();
+/* ---------- ย้อน ---------- */
+
+function previousScene(){
+
+let scene=getCurrentScene();
+
+if(scene<=1){
+
+scene=1;
+
+}else{
+
+scene--;
+
 }
 
+saveScene(scene);
 
-function getSceneState(){
-  return {
-    topic:get('topic'),
-    structure:masterStructure,
-    sceneCount:getSceneCount(),
-    currentScene:getCurrentScene(),
-    locks:getContinuityLocks(),
-    dna:getDeliveryDNA(),
-    visual:getVisualStyle()
-  };
+generateCurrentScene();
+
 }
 
-const SCENE_PROGRESS_KEY = 'STORY_CURRENT_SCENE_V5';
+/* ---------- เริ่มใหม่ ---------- */
 
-function getCurrentScene(){
-  const n=Number(localStorage.getItem(SCENE_PROGRESS_KEY)||0);
-  return Math.max(0,Math.min(n,getSceneCount()));
+function restartScenes(){
+
+saveScene(1);
+
+generateCurrentScene();
+
 }
 
-function updateSceneBadge(){
-  const total=getSceneCount();
-  const current=getCurrentScene();
-  const badge=document.getElementById('sceneBadge');
-  if(badge){
-    badge.textContent=(current>0?`Scene ${current}/${total}`:`ยังไม่เริ่ม • ${total} Scenes`) + ' • 10s/Scene';
-  }
-}
+/* ---------- Queue ---------- */
 
-function saveSceneProgress(n){
-  const total=getSceneCount();
-  n=Math.max(0,Math.min(Number(n)||0,total));
-  localStorage.setItem(SCENE_PROGRESS_KEY,String(n));
-  updateSceneBadge();
-}
+function generateQueue(){
 
-function scenePrompt(sceneNumber, total){
-  const locks=getContinuityLocks(), dna=getDeliveryDNA(), style=getVisualStyle();
-  const previous = sceneNumber>1
-    ? `ต้องต่อจาก Scene ${sceneNumber-1} ที่ ChatGPT สร้างไปแล้ว ห้ามเริ่มเรื่องใหม่`
-    : `นี่คือ Scene 1 — เริ่มเรื่องตาม MASTER STRUCTURE โดยไม่สร้าง Scene ถัดไป`;
+const total=getSceneCount();
 
-  return `######
-CHATGPT MULTI-SCENE STORY — SCENE ${sceneNumber}/${total}
-TIME = 10 SECONDS FIXED
-######
-
-${previous}
-
-==================================================
-MASTER STRUCTURE — MUST READ FIRST
-==================================================
-
-${masterStructure}
-
-==================================================
-ABSOLUTE RULE
-==================================================
-
-สร้างเพียง Scene ${sceneNumber} เท่านั้น
-
-ห้ามสร้าง Scene อื่น
-ห้ามสรุป Scene อื่น
-ห้ามเขียนล่วงหน้า Scene ถัดไป
-
-หากผู้ใช้พิมพ์:
-“ต่อ”
-หรือ
-“ฉากต่อไป”
-
-ให้สร้าง Scene ถัดไปเพียง 1 Scene เท่านั้น
-
-ห้ามสร้าง Hook ใหม่
-ห้าม Reset Narrative
-ห้ามเปลี่ยน Character / Location / Atmosphere / Environment
-ห้ามเปลี่ยน Voice DNA
-ห้ามข้าม Master Stage
-ห้ามย้อนกลับไป Stage ก่อนหน้า เว้นแต่ Master Structure ต้องการ Callback
-
-==================================================
-STORY INPUT
-==================================================
-
-TOPIC:
-${get('topic')||'[หัวข้อเรื่อง]'}
-
-CONTEXT:
-${get('context')||'[AUTO]'}
-
-FACTS:
-${get('facts')||'[NONE]'}
-
-STORY TYPE:
-${get('type')}
-
-STORY ANGLE:
-${get('angle')}
-
-POV:
-${get('pov')}
-
-EMOTIONAL TARGET:
-${get('emotion')}
-
-==================================================
-CONTINUITY LOCK
-==================================================
-
-CHARACTER:
-${locks.character||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
-
-LOCATION:
-${locks.location||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
-
-ATMOSPHERE:
-${locks.atmosphere||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
-
-ENVIRONMENT:
-${locks.environment||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
-
-==================================================
-VOICE & DELIVERY LOCK
-==================================================
-
-PACE:
-${dna.pace}
-
-TONE:
-${dna.tone}
-
-VOICE COLOR:
-${dna.color}
-
-SPEED:
-${dna.speed}
-
-บทพูดต้องสัมพันธ์กับเวลา 10 วินาที
-เป้าหมาย ${sceneWordsFor10Sec(dna.speed)}
-ต้องจบประโยคก่อนหมดเวลา
-ห้ามยัดบทพูดจนฟังไม่เป็นธรรมชาติ
-
-==================================================
-VISUAL STYLE
-==================================================
-
-${style}
-
-==================================================
-SCENE ${sceneNumber}/${total} OUTPUT
-==================================================
-
-TIME:
-00:00–00:10
-
-MASTER STAGE:
-ระบุ Stage จาก MASTER STRUCTURE ที่ Scene นี้กำลังทำหน้าที่
-
-STORY PURPOSE:
-หน้าที่ของ Scene นี้ในเรื่อง
-
-CONTINUITY FROM PREVIOUS:
-ถ้ามี ให้ระบุสิ่งที่รับต่อจาก Scene ก่อนหน้า
-
-VISUAL:
-สิ่งที่ผู้ชมเห็น
-
-CHARACTER:
-ต้องตรงกับ Character Lock
-
-LOCATION:
-ต้องตรงกับ Location Lock
-
-ATMOSPHERE:
-ต้องตรงกับ Atmosphere Lock
-
-ENVIRONMENT:
-ต้องตรงกับ Environment Lock
-
-ACTION:
-การกระทำต่อเนื่อง
-
-CAMERA:
-Framing / Movement / Shot
-
-VOICE / DELIVERY:
-Pace / Tone / Voice Color / Speed
-
-DIALOGUE:
-บทพูดภาษาไทยที่จบภายใน 10 วินาที
-
-AUDIO:
-Ambient / SFX / Music ถ้ามี
-
-END BEAT:
-จุดที่ส่งต่อไป Scene ถัดไป
-
-CONTINUITY CHECK:
-✓ Character
-✓ Location
-✓ Atmosphere
-✓ Environment
-✓ Voice
-✓ Timing 10s
-✓ Master Stage
-
-==================================================
-NEXT-SCENE HANDOFF
-==================================================
-
-เขียนข้อมูลสั้น ๆ สำหรับให้ Scene ถัดไปรับต่อ
-แต่ห้ามสร้าง Scene ถัดไป
-
-OUTPUT:
-ONE MARKDOWN CODE BLOCK ONLY
-######`;
-}
-
-function generateAllScenes(){
-  const total=getSceneCount();
-  saveSceneProgress(1);
-  result.value=`ระบบ Multi-Scene พร้อมสร้างทีละ Scene
+document.getElementById("promptOutput").textContent=`ระบบ Multi-Scene พร้อมแล้ว
 
 Scene 1/${total}
 
-${scenePrompt(1,total)}
+ขั้นตอนใช้งาน
 
-----------------------------------------
-การใช้งานกับ ChatGPT
-----------------------------------------
-
-1. Copy Prompt นี้ไปให้ ChatGPT
-2. ให้ ChatGPT สร้าง Scene 1
-3. เมื่อ Scene 1 เสร็จ พิมพ์: "ต่อ"
+1. Copy Prompt ไป ChatGPT
+2. ChatGPT สร้าง Scene 1
+3. พิมพ์ "ต่อ"
 4. ChatGPT สร้าง Scene 2
-5. พิมพ์ "ต่อ" อีกครั้ง
-6. ทำซ้ำจนถึง Scene ${total}/${total}
+5. ทำซ้ำจนถึง Scene ${total}
 
-กฎ:
-ทุกครั้งสร้างเพียง 1 Scene
 ทุก Scene = 10 วินาที
-ต้องรักษา Master Structure + Continuity Lock + Voice DNA`;
+Character Lock ต้องคงเดิม
+Location Lock ต้องคงเดิม
+Atmosphere Lock ต้องคงเดิม
+Voice DNA ต้องคงเดิม
+MASTER STRUCTURE ต้องไม่เปลี่ยน`;
 
-  document.getElementById('status').textContent=
-    `✨ Multi-Scene Queue พร้อมแล้ว • เริ่ม Scene 1/${total} • 10s/Scene`;
-  updateSceneBadge();
+refreshStatus();
+
 }
 
-function generateNextScene(){
-  const total=getSceneCount();
-  let current=getCurrentScene();
+/* =====================================================
+   BUTTON EVENTS
+===================================================== */
 
-  if(current>=total){
-    alert(`สร้างครบแล้ว Scene ${total}/${total}`);
-    return;
-  }
+document.getElementById("nextSceneBtn")
+?.addEventListener("click",continueScene);
 
-  const next=current+1;
-  saveSceneProgress(next);
-  result.value=scenePrompt(next,total);
+document.getElementById("prevSceneBtn")
+?.addEventListener("click",previousScene);
 
-  document.getElementById('status').textContent=
-    `➡️ Prompt Scene ${next}/${total} พร้อมแล้ว • 10s FIXED • Copy ไป ChatGPT`;
+document.getElementById("generateSceneBtn")
+?.addEventListener("click",generateCurrentScene);
 
-  updateSceneBadge();
+document.getElementById("queueBtn")
+?.addEventListener("click",generateQueue);
+
+/* =====================================================
+   VALIDATION ENGINE
+===================================================== */
+
+function validatePrompt(){
+
+const problems=[];
+
+if(!document.getElementById("topic").value.trim()){
+
+problems.push("ยังไม่ได้ใส่หัวข้อ");
+
 }
 
-function previousScene(){
-  const current=getCurrentScene();
-  if(current<=1){
-    saveSceneProgress(0);
-    result.value='';
-    document.getElementById('status').textContent='↩️ กลับสู่ก่อนเริ่ม Scene 1';
-    return;
-  }
+if(!document.getElementById("masterStructure").value.trim()){
 
-  const previous=current-1;
-  saveSceneProgress(previous);
-  result.value=scenePrompt(previous,getSceneCount());
+problems.push("Master Structure ว่าง");
 
-  document.getElementById('status').textContent=
-    `↩️ ย้อนกลับมาที่ Prompt Scene ${previous}/${getSceneCount()}`;
-
-  updateSceneBadge();
 }
 
-function resetSceneProgress(){
-  localStorage.removeItem(SCENE_PROGRESS_KEY);
-  updateSceneBadge();
-  document.getElementById('status').textContent='⏮️ รีเซ็ตลำดับแล้ว • พร้อมเริ่ม Scene 1';
+if(getCurrentScene()>getSceneCount()){
+
+problems.push("Scene เกินจำนวน");
+
 }
 
+if(problems.length){
 
-async function copyText(){
-  const text=result.value||'';
-  if(!text)return alert('ยังไม่มี Prompt ให้ Copy');
-  try{
-    await navigator.clipboard.writeText(text);
-    alert('Copy Prompt สำเร็จ');
-  }catch(e){
-    const ta=document.createElement('textarea');
-    ta.value=text;document.body.appendChild(ta);ta.select();
-    document.execCommand('copy');ta.remove();
-    alert('Copy Prompt สำเร็จ');
-  }
-}
-function clearData(){
-  if(!confirm('รีเซ็ต Story Builder ทั้งหมด รวม Master Structure และ Scene Progress?'))return;
-  localStorage.removeItem(LS);localStorage.removeItem(PS);localStorage.removeItem(MASTER_KEY);localStorage.removeItem('STORY_UI_STATE_V5');localStorage.removeItem('STORY_ACTIVE_PRESET_V5');resetSceneProgress();location.reload();
+return{
+
+ok:false,
+list:problems
+
+};
+
 }
 
-function loadUiState(){
-  const keys=['lockCharacter','lockLocation','lockAtmosphere','lockEnvironment','characterLock','locationLock','atmosphereLock','environmentLock','deliveryPace','voiceTone','voiceColor','speechSpeed','visualStyle','sceneCount'];
-  try{
-    const o=JSON.parse(localStorage.getItem('STORY_UI_STATE_V5')||'{}');
-    keys.forEach(k=>{const e=document.getElementById(k);if(e && o[k]!==undefined){if(e.type==='checkbox')e.checked=!!o[k];else e.value=o[k]}});
-  }catch(e){}
+return{
+
+ok:true,
+list:[]
+
+};
+
 }
-function saveUiState(){
-  const keys=['lockCharacter','lockLocation','lockAtmosphere','lockEnvironment','characterLock','locationLock','atmosphereLock','environmentLock','deliveryPace','voiceTone','voiceColor','speechSpeed','visualStyle','sceneCount'];
-  const o={};keys.forEach(k=>{const e=document.getElementById(k);if(e)o[k]=e.type==='checkbox'?e.checked:e.value});
-  localStorage.setItem('STORY_UI_STATE_V5',JSON.stringify(o));
+
+/* ---------- Build Prompt ใหม่ ---------- */
+
+const oldBuildPrompt=buildPrompt;
+
+buildPrompt=function(){
+
+const check=validatePrompt();
+
+if(!check.ok){
+
+document.getElementById("promptOutput").textContent=
+`พบปัญหา
+
+${check.list.map(x=>"• "+x).join("\n")}`;
+
+return;
+
 }
-document.addEventListener('change',function(e){
-  saveUiState();
-  if(e.target && e.target.id==='sceneCount'){
-    const total=getSceneCount();
-    const current=getCurrentScene();
-    if(current>total) saveSceneProgress(total);
-    else updateSceneBadge();
-  }
-});
-modeTopic();initMasterUI();loadUiState();renderPresets();loadPreset();buildPrompt();updateSceneBadge();
+
+oldBuildPrompt();
+
+};
+
+/* =====================================================
+   MASTER PRIORITY RULE
+===================================================== */
+
+const MASTER_PRIORITY=`
+MASTER STRUCTURE = PRIORITY #1
+
+ลำดับความสำคัญ
+
+1. STORY STRUCTURE กลาง
+2. Character Lock
+3. Location Lock
+4. Atmosphere Lock
+5. Environment Lock
+6. Voice DNA
+7. Scene Timing
+8. Camera
+9. Editing
+10. Visual Enhancement
+
+หากขัดกัน
+MASTER STRUCTURE ชนะเสมอ
+`;
+
+window.STORY_MASTER_PRIORITY=MASTER_PRIORITY;
+
+/* =====================================================
+   CONTINUITY CHECK
+===================================================== */
+
+function continuityReport(){
+
+return{
+
+scene:getCurrentScene(),
+
+character:document.getElementById("lockCharacter").value,
+
+location:document.getElementById("lockLocation").value,
+
+atmosphere:document.getElementById("lockAtmosphere").value,
+
+environment:document.getElementById("lockEnvironment").value,
+
+voice:document.getElementById("voiceDNA").value,
+
+speed:document.getElementById("voiceSpeed").value,
+
+visual:document.getElementById("visualStyle").value
+
+};
+
+}
+
+/* ---------- INIT ---------- */
+
+restartScenes();
 
 </script>
+
+<!-- ===== จบ PART 7 ===== -->
+
+<!-- =========================================
+     PART 8 — FINAL INIT + BACKUP + VALIDATION
+========================================= -->
+
+<script>
+
+/* =====================================================
+   EXPORT / IMPORT BACKUP
+===================================================== */
+
+function exportBackup(){
+
+try{
+
+const backup={
+
+version:"V9 PRO",
+
+time:new Date().toISOString(),
+
+presets:presets,
+
+master:localStorage.getItem(MASTER_KEY)||"",
+
+form:JSON.parse(localStorage.getItem(FORM_KEY)||"{}"),
+
+scene:getCurrentScene()
+
+};
+
+const blob=new Blob(
+
+[JSON.stringify(backup,null,2)],
+
+{type:"application/json"}
+
+);
+
+const url=URL.createObjectURL(blob);
+
+const a=document.createElement("a");
+
+a.href=url;
+
+a.download="story_builder_v9_backup.json";
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+}catch(e){
+
+alert("Export ไม่สำเร็จ");
+
+}
+
+}
+
+/* ---------- Import ---------- */
+
+function importBackup(file){
+
+const reader=new FileReader();
+
+reader.onload=e=>{
+
+try{
+
+const data=JSON.parse(e.target.result);
+
+if(data.presets){
+
+presets=data.presets;
+
+localStorage.setItem(PS,JSON.stringify(presets));
+
+}
+
+if(data.master){
+
+localStorage.setItem(MASTER_KEY,data.master);
+
+}
+
+if(data.form){
+
+localStorage.setItem(FORM_KEY,JSON.stringify(data.form));
+
+}
+
+if(data.scene){
+
+localStorage.setItem(SCENE_KEY,data.scene);
+
+}
+
+location.reload();
+
+}catch(err){
+
+alert("ไฟล์ Backup ไม่ถูกต้อง");
+
+}
+
+};
+
+reader.readAsText(file);
+
+}
+
+/* =====================================================
+   SAFE BUILD PROMPT
+===================================================== */
+
+const __originalBuildPrompt=buildPrompt;
+
+buildPrompt=function(){
+
+const check=validatePrompt();
+
+if(!check.ok){
+
+document.getElementById("promptOutput").textContent=
+
+`พบปัญหา
+
+${check.list.map(x=>"• "+x).join("\n")}`;
+
+return;
+
+}
+
+__originalBuildPrompt();
+
+refreshStatus();
+
+};
+
+/* =====================================================
+   SAFE EVENT RE-BIND
+===================================================== */
+
+const safeBind=(id,event,fn)=>{
+
+const el=document.getElementById(id);
+
+if(el){
+
+el.addEventListener(event,fn);
+
+}
+
+};
+
+safeBind("buildPromptBtn","click",buildPrompt);
+safeBind("generateSceneBtn","click",generateCurrentScene);
+safeBind("nextSceneBtn","click",continueScene);
+safeBind("prevSceneBtn","click",previousScene);
+safeBind("queueBtn","click",generateQueue);
+
+/* =====================================================
+   GLOBAL SHORTCUT
+===================================================== */
+
+document.addEventListener("keydown",e=>{
+
+if(e.ctrlKey&&e.key==="Enter"){
+
+e.preventDefault();
+
+buildPrompt();
+
+}
+
+});
+
+/* =====================================================
+   WINDOW API
+===================================================== */
+
+window.StoryBuilder={
+
+buildPrompt,
+generateCurrentScene,
+continueScene,
+previousScene,
+restartScenes,
+exportBackup,
+importBackup,
+continuityReport
+
+};
+
+/* =====================================================
+   FINAL VALIDATION
+===================================================== */
+
+function finalValidation(){
+
+const result=[];
+
+const ok=(name)=>result.push(`✅ ${name}`);
+const no=(name)=>result.push(`❌ ${name}`);
+
+document.getElementById("presetSelect")?ok("Preset"):no("Preset");
+
+document.getElementById("topic")?ok("Topic"):no("Topic");
+
+document.getElementById("masterStructure")?ok("Master Structure"):no("Master Structure");
+
+document.getElementById("promptOutput")?ok("Prompt Output"):no("Prompt Output");
+
+document.getElementById("sceneCount")?ok("Scene Engine"):no("Scene Engine");
+
+document.getElementById("visualStyle")?ok("3D Style"):no("3D Style");
+
+console.log(
+
+"%cSTORY BUILDER V9 PRO READY",
+
+"color:#4fd1c5;font-size:16px;font-weight:bold"
+
+);
+
+console.table(result);
+
+return result;
+
+}
+
+/* =====================================================
+   WINDOW LOAD
+===================================================== */
+
+window.addEventListener("load",()=>{
+
+try{
+
+loadPresets();
+
+renderPresets();
+
+loadMaster();
+
+restoreForm();
+
+updateSceneBadge();
+
+refreshStatus();
+
+generateCurrentScene();
+
+finalValidation();
+
+}catch(e){
+
+console.error("V9 INIT ERROR",e);
+
+alert("พบข้อผิดพลาดระหว่างเริ่มระบบ กรุณาเปิด Console");
+
+}
+
+});
+
+</script>
+
+<!-- =========================================
+     END OF FILE
+========================================= -->
+
 </body>
 </html>
