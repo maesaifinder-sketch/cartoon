@@ -184,11 +184,20 @@ textarea{resize:vertical}
             <option value="8">8 Scenes</option><option value="10">10 Scenes</option>
           </select>
           <div class="scene-tools" style="margin-top:8px">
-            <button class="make" onclick="generateAllScenes()">✨ สร้างทั้งหมดทุก Scene</button>
+            <button class="make" onclick="generateAllScenes()">✨ สร้าง Prompt Multi-Scene</button>
             <button class="next" onclick="generateNextScene()">➡️ ต่อ / ฉากต่อไป</button>
           </div>
+          <div class="scene-tools" style="margin-top:6px">
+            <button class="secondary" onclick="previousScene()">↩️ ย้อนกลับ Scene</button>
+            <button class="all" onclick="resetSceneProgress()">⏮️ เริ่มที่ Scene 1</button>
+          </div>
           <div class="continue-box">
-            สำหรับ ChatGPT ให้ส่งผลลัพธ์ Scene ปัจจุบัน แล้วพิมพ์เพียง <code>ต่อ</code> หรือ <code>ฉากต่อไป</code> เพื่อให้สร้าง Scene ถัดไป โดยต้องรักษา Lock + Master Structure + Voice DNA เดิม
+            <b>ระบบต่อ Scene:</b> ปุ่ม “ต่อ / ฉากต่อไป” ครั้งแรก = Prompt Scene 1
+            จากนั้นกดซ้ำ = Scene 2 → Scene 3 → ... จนครบ
+            โดยทุก Scene ต้องรักษา Master Structure + Continuity Lock + Voice DNA + 10 วินาที
+            <br><br>
+            <b>ใช้กับ ChatGPT:</b> หลัง ChatGPT สร้าง Scene ปัจจุบันแล้ว ให้พิมพ์เพียง
+            <code>ต่อ</code> หรือ <code>ฉากต่อไป</code> เพื่อให้ ChatGPT สร้าง Scene ถัดไปเพียง 1 Scene
           </div>
         </div>
 
@@ -513,6 +522,7 @@ ${structure}
 ==================================================
 STORY INPUT
 ==================================================
+
 หัวข้อ:
 ${topic||'[กรุณาใส่หัวข้อเรื่อง]'}
 
@@ -810,8 +820,8 @@ ONE Markdown Code Block ONLY
 ######
 `;
   result.value=prompt;
-  document.getElementById('sceneBadge').textContent=scenes+' Scenes • 10s/Scene';
-  document.getElementById('status').textContent='🔒 Master + Continuity Lock ACTIVE • 10s/Scene';
+  updateSceneBadge();
+  document.getElementById('status').textContent='🔒 Master + Continuity Lock ACTIVE • 10s/Scene • กด “ต่อ / ฉากต่อไป” เพื่อสร้างทีละ Scene';
 }
 function initMasterUI(){
   const el=document.getElementById('masterStructure');
@@ -865,40 +875,296 @@ function getSceneState(){
     topic:get('topic'),
     structure:masterStructure,
     sceneCount:getSceneCount(),
+    currentScene:getCurrentScene(),
     locks:getContinuityLocks(),
     dna:getDeliveryDNA(),
     visual:getVisualStyle()
   };
 }
 
+const SCENE_PROGRESS_KEY = 'STORY_CURRENT_SCENE_V5';
+
+function getCurrentScene(){
+  const n=Number(localStorage.getItem(SCENE_PROGRESS_KEY)||0);
+  return Math.max(0,Math.min(n,getSceneCount()));
+}
+
+function updateSceneBadge(){
+  const total=getSceneCount();
+  const current=getCurrentScene();
+  const badge=document.getElementById('sceneBadge');
+  if(badge){
+    badge.textContent=(current>0?`Scene ${current}/${total}`:`ยังไม่เริ่ม • ${total} Scenes`) + ' • 10s/Scene';
+  }
+}
+
+function saveSceneProgress(n){
+  const total=getSceneCount();
+  n=Math.max(0,Math.min(Number(n)||0,total));
+  localStorage.setItem(SCENE_PROGRESS_KEY,String(n));
+  updateSceneBadge();
+}
+
+function scenePrompt(sceneNumber, total){
+  const locks=getContinuityLocks(), dna=getDeliveryDNA(), style=getVisualStyle();
+  const previous = sceneNumber>1
+    ? `ต้องต่อจาก Scene ${sceneNumber-1} ที่ ChatGPT สร้างไปแล้ว ห้ามเริ่มเรื่องใหม่`
+    : `นี่คือ Scene 1 — เริ่มเรื่องตาม MASTER STRUCTURE โดยไม่สร้าง Scene ถัดไป`;
+
+  return `######
+CHATGPT MULTI-SCENE STORY — SCENE ${sceneNumber}/${total}
+TIME = 10 SECONDS FIXED
+######
+
+${previous}
+
+==================================================
+MASTER STRUCTURE — MUST READ FIRST
+==================================================
+
+${masterStructure}
+
+==================================================
+ABSOLUTE RULE
+==================================================
+
+สร้างเพียง Scene ${sceneNumber} เท่านั้น
+
+ห้ามสร้าง Scene อื่น
+ห้ามสรุป Scene อื่น
+ห้ามเขียนล่วงหน้า Scene ถัดไป
+
+หากผู้ใช้พิมพ์:
+“ต่อ”
+หรือ
+“ฉากต่อไป”
+
+ให้สร้าง Scene ถัดไปเพียง 1 Scene เท่านั้น
+
+ห้ามสร้าง Hook ใหม่
+ห้าม Reset Narrative
+ห้ามเปลี่ยน Character / Location / Atmosphere / Environment
+ห้ามเปลี่ยน Voice DNA
+ห้ามข้าม Master Stage
+ห้ามย้อนกลับไป Stage ก่อนหน้า เว้นแต่ Master Structure ต้องการ Callback
+
+==================================================
+STORY INPUT
+==================================================
+
+TOPIC:
+${get('topic')||'[หัวข้อเรื่อง]'}
+
+CONTEXT:
+${get('context')||'[AUTO]'}
+
+FACTS:
+${get('facts')||'[NONE]'}
+
+STORY TYPE:
+${get('type')}
+
+STORY ANGLE:
+${get('angle')}
+
+POV:
+${get('pov')}
+
+EMOTIONAL TARGET:
+${get('emotion')}
+
+==================================================
+CONTINUITY LOCK
+==================================================
+
+CHARACTER:
+${locks.character||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
+
+LOCATION:
+${locks.location||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
+
+ATMOSPHERE:
+${locks.atmosphere||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
+
+ENVIRONMENT:
+${locks.environment||'[LOCKED — ใช้จาก Scene ก่อนหน้า]'}
+
+==================================================
+VOICE & DELIVERY LOCK
+==================================================
+
+PACE:
+${dna.pace}
+
+TONE:
+${dna.tone}
+
+VOICE COLOR:
+${dna.color}
+
+SPEED:
+${dna.speed}
+
+บทพูดต้องสัมพันธ์กับเวลา 10 วินาที
+เป้าหมาย ${sceneWordsFor10Sec(dna.speed)}
+ต้องจบประโยคก่อนหมดเวลา
+ห้ามยัดบทพูดจนฟังไม่เป็นธรรมชาติ
+
+==================================================
+VISUAL STYLE
+==================================================
+
+${style}
+
+==================================================
+SCENE ${sceneNumber}/${total} OUTPUT
+==================================================
+
+TIME:
+00:00–00:10
+
+MASTER STAGE:
+ระบุ Stage จาก MASTER STRUCTURE ที่ Scene นี้กำลังทำหน้าที่
+
+STORY PURPOSE:
+หน้าที่ของ Scene นี้ในเรื่อง
+
+CONTINUITY FROM PREVIOUS:
+ถ้ามี ให้ระบุสิ่งที่รับต่อจาก Scene ก่อนหน้า
+
+VISUAL:
+สิ่งที่ผู้ชมเห็น
+
+CHARACTER:
+ต้องตรงกับ Character Lock
+
+LOCATION:
+ต้องตรงกับ Location Lock
+
+ATMOSPHERE:
+ต้องตรงกับ Atmosphere Lock
+
+ENVIRONMENT:
+ต้องตรงกับ Environment Lock
+
+ACTION:
+การกระทำต่อเนื่อง
+
+CAMERA:
+Framing / Movement / Shot
+
+VOICE / DELIVERY:
+Pace / Tone / Voice Color / Speed
+
+DIALOGUE:
+บทพูดภาษาไทยที่จบภายใน 10 วินาที
+
+AUDIO:
+Ambient / SFX / Music ถ้ามี
+
+END BEAT:
+จุดที่ส่งต่อไป Scene ถัดไป
+
+CONTINUITY CHECK:
+✓ Character
+✓ Location
+✓ Atmosphere
+✓ Environment
+✓ Voice
+✓ Timing 10s
+✓ Master Stage
+
+==================================================
+NEXT-SCENE HANDOFF
+==================================================
+
+เขียนข้อมูลสั้น ๆ สำหรับให้ Scene ถัดไปรับต่อ
+แต่ห้ามสร้าง Scene ถัดไป
+
+OUTPUT:
+ONE MARKDOWN CODE BLOCK ONLY
+######`;
+}
+
 function generateAllScenes(){
-  buildPrompt();
-  const s=getSceneCount();
-  document.getElementById('status').textContent='สร้าง Multi-Scene Prompt แล้ว • '+s+' Scenes × 10s';
+  const total=getSceneCount();
+  saveSceneProgress(1);
+  result.value=`ระบบ Multi-Scene พร้อมสร้างทีละ Scene
+
+Scene 1/${total}
+
+${scenePrompt(1,total)}
+
+----------------------------------------
+การใช้งานกับ ChatGPT
+----------------------------------------
+
+1. Copy Prompt นี้ไปให้ ChatGPT
+2. ให้ ChatGPT สร้าง Scene 1
+3. เมื่อ Scene 1 เสร็จ พิมพ์: "ต่อ"
+4. ChatGPT สร้าง Scene 2
+5. พิมพ์ "ต่อ" อีกครั้ง
+6. ทำซ้ำจนถึง Scene ${total}/${total}
+
+กฎ:
+ทุกครั้งสร้างเพียง 1 Scene
+ทุก Scene = 10 วินาที
+ต้องรักษา Master Structure + Continuity Lock + Voice DNA`;
+
+  document.getElementById('status').textContent=
+    `✨ Multi-Scene Queue พร้อมแล้ว • เริ่ม Scene 1/${total} • 10s/Scene`;
+  updateSceneBadge();
 }
 
 function generateNextScene(){
-  const n=Math.max(1, Number(localStorage.getItem('STORY_CURRENT_SCENE_V5')||0)+1);
   const total=getSceneCount();
-  if(n>total){
-    alert('ครบทุก Scene แล้ว');
+  let current=getCurrentScene();
+
+  if(current>=total){
+    alert(`สร้างครบแล้ว Scene ${total}/${total}`);
     return;
   }
-  const continuation=buildContinuationPrompt(n);
-  result.value=continuation;
-  localStorage.setItem('STORY_CURRENT_SCENE_V5',String(n));
-  document.getElementById('sceneBadge').textContent=n+' / '+total+' Scenes';
-  document.getElementById('status').textContent='➡️ พร้อมสร้าง Scene '+n+' • 10s FIXED • พิมพ์ “ต่อ” เพื่อไป Scene ถัดไป';
+
+  const next=current+1;
+  saveSceneProgress(next);
+  result.value=scenePrompt(next,total);
+
+  document.getElementById('status').textContent=
+    `➡️ Prompt Scene ${next}/${total} พร้อมแล้ว • 10s FIXED • Copy ไป ChatGPT`;
+
+  updateSceneBadge();
+}
+
+function previousScene(){
+  const current=getCurrentScene();
+  if(current<=1){
+    saveSceneProgress(0);
+    result.value='';
+    document.getElementById('status').textContent='↩️ กลับสู่ก่อนเริ่ม Scene 1';
+    return;
+  }
+
+  const previous=current-1;
+  saveSceneProgress(previous);
+  result.value=scenePrompt(previous,getSceneCount());
+
+  document.getElementById('status').textContent=
+    `↩️ ย้อนกลับมาที่ Prompt Scene ${previous}/${getSceneCount()}`;
+
+  updateSceneBadge();
 }
 
 function resetSceneProgress(){
-  localStorage.removeItem('STORY_CURRENT_SCENE_V5');
+  localStorage.removeItem(SCENE_PROGRESS_KEY);
+  updateSceneBadge();
+  document.getElementById('status').textContent='⏮️ รีเซ็ตลำดับแล้ว • พร้อมเริ่ม Scene 1';
 }
+
 
 function copyText(){navigator.clipboard.writeText(result.value).then(()=>alert('Copy Story Structure Prompt สำเร็จ'))}
 function clearData(){
   if(!confirm('รีเซ็ต Story Builder ทั้งหมด รวม Master Structure และ Scene Progress?'))return;
-  localStorage.removeItem(LS);localStorage.removeItem(PS);localStorage.removeItem(MASTER_KEY);resetSceneProgress();location.reload();
+  localStorage.removeItem(LS);localStorage.removeItem(PS);localStorage.removeItem(MASTER_KEY);localStorage.removeItem('STORY_UI_STATE_V5');resetSceneProgress();location.reload();
 }
 
 function loadUiState(){
@@ -913,8 +1179,16 @@ function saveUiState(){
   const o={};keys.forEach(k=>{const e=document.getElementById(k);if(e)o[k]=e.type==='checkbox'?e.checked:e.value});
   localStorage.setItem('STORY_UI_STATE_V5',JSON.stringify(o));
 }
-document.addEventListener('change',saveUiState);
-renderPresets();modeTopic();initMasterUI();loadUiState();buildPrompt();
+document.addEventListener('change',function(e){
+  saveUiState();
+  if(e.target && e.target.id==='sceneCount'){
+    const total=getSceneCount();
+    const current=getCurrentScene();
+    if(current>total) saveSceneProgress(total);
+    else updateSceneBadge();
+  }
+});
+renderPresets();modeTopic();initMasterUI();loadUiState();buildPrompt();updateSceneBadge();
 
 </script>
 </body>
